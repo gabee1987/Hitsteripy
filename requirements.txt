@@ -1,0 +1,4 @@
+requests
+qrcode
+jinja2
+weasyprint
