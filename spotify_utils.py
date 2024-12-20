@@ -1,108 +1,92 @@
 import os
-import requests
-import base64
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyClientCredentials
+from spotify_auth import get_spotify_token
 from logger import log_info, log_error
-import logging
 
-SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
-SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
-
-print("SPOTIFY_CLIENT_ID:", SPOTIFY_CLIENT_ID)
-print("SPOTIFY_CLIENT_SECRET:", SPOTIFY_CLIENT_SECRET)
-
-
-if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
-    log_error("Please set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET environment variables.")
+# Initialize Spotipy with client credentials
+try:
+    log_info("Initializing Spotify client...")
+    token = get_spotify_token()
+    sp = Spotify(auth=token)
+    log_info("Spotify client successfully initialized.")
+except Exception as e:
+    log_error(f"Failed to initialize Spotify client: {e}")
     exit(1)
 
 
-def base64_encode(data):
-    """Encode a string in Base64 format."""
-    return base64.b64encode(data.encode()).decode()
-
-
-# Enable requests debugging
-logging.basicConfig(level=logging.DEBUG)
-
-def get_spotify_token():
-    """Retrieve a Spotify API token using Client Credentials Flow."""
-    log_info("Fetching Spotify API token...")
+def test_spotify_connection():
+    """Test connection to Spotify API."""
     try:
-        # Manually encode client_id:client_secret to Base64
-        auth = f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}"
-        encoded_auth = base64.b64encode(auth.encode()).decode()
-
-        # Replicate the curl command's headers and data
-        headers = {"Authorization": f"Basic {encoded_auth}"}
-        data = {"grant_type": "client_credentials"}
-
-        # Make the POST request
-        resp = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data)
-
-        # Debugging output
-        print("Response Status Code:", resp.status_code)
-        print("Response Content:", resp.text)
-
-        # Check for successful response
-        resp.raise_for_status()
-        log_info("Spotify token retrieved successfully.")
-        return resp.json()["access_token"]
-    except requests.RequestException as e:
-        log_error(f"Failed to fetch Spotify API token: {e}")
-        if e.response:
+        log_info("Testing Spotify API connection...")
+        sp.search(q="test", type="track", limit=1)
+        log_info("Spotify API connection test successful.")
+        return True
+    except Exception as e:
+        log_error(f"Spotify connection test failed: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            log_error(f"Response Status Code: {e.response.status_code}")
             log_error(f"Response Content: {e.response.text}")
-        raise
-
-
+        return False
 
 
 def extract_id_from_url(url):
     """Extract Spotify ID from a track or playlist URL."""
-    parts = url.split('/')
-    return parts[-1].split('?')[0]
-
-
-def fetch_track_details(track_id, token):
-    """Fetch details for a specific Spotify track."""
-    headers = {"Authorization": f"Bearer {token}"}
     try:
-        log_info(f"Fetching details for track ID: {track_id}")
-        r = requests.get(f"https://api.spotify.com/v1/tracks/{track_id}", headers=headers)
-        r.raise_for_status()
-        data = r.json()
-        artist = data['artists'][0]['name']
-        song_name = data['name']
-        year = data['album']['release_date'].split('-')[0]
-        log_info(f"Track details fetched: {artist} - {song_name} ({year})")
-        return artist, song_name, year
-    except requests.RequestException as e:
-        log_error(f"Failed to fetch track details: {e}")
+        log_info(f"Extracting Spotify ID from URL: {url}")
+        parts = url.split('/')
+        spotify_id = parts[-1].split('?')[0]
+        log_info(f"Extracted Spotify ID: {spotify_id}")
+        return spotify_id
+    except Exception as e:
+        log_error(f"Failed to extract Spotify ID from URL: {url}")
+        log_error(f"Error Details: {e}")
         raise
 
 
-def fetch_playlist_tracks(playlist_id, token):
-    """Fetch all tracks from a Spotify playlist."""
-    headers = {"Authorization": f"Bearer {token}"}
-    tracks = []
-    url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+def fetch_track_details(track_id):
+    """Fetch details for a specific Spotify track using Spotipy."""
     try:
-        log_info(f"Fetching tracks for playlist ID: {playlist_id}")
-        while url:
-            r = requests.get(url, headers=headers)
-            r.raise_for_status()
-            data = r.json()
-            for item in data['items']:
-                track = item['track']
-                if track is None:
-                    continue
-                artist = track['artists'][0]['name']
-                song_name = track['name']
-                year = track['album']['release_date'].split('-')[0]
-                track_url = track['external_urls']['spotify']
-                tracks.append((artist, song_name, year, track_url))
-            url = data['next']
+        log_info(f"Fetching details for track ID: {track_id}")
+        track = sp.track(track_id)
+        artist = track['artists'][0]['name']
+        song_name = track['name']
+        year = track['album']['release_date'].split('-')[0]
+        log_info(f"Track details fetched successfully: {artist} - {song_name} ({year})")
+        return artist, song_name, year
+    except Exception as e:
+        log_error(f"Failed to fetch track details for ID: {track_id}")
+        log_error(f"Error Details: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            log_error(f"Response Status Code: {e.response.status_code}")
+            log_error(f"Response Content: {e.response.text}")
+        raise
+
+
+def fetch_playlist_tracks(playlist_id):
+    """Fetch all tracks from a Spotify playlist using Spotipy."""
+    try:
+        log_info(f"Fetching tracks from playlist ID: {playlist_id}")
+        results = sp.playlist_items(playlist_id)
+        tracks = []
+        log_info("Parsing playlist items...")
+        for idx, item in enumerate(results['items']):
+            track = item.get('track')
+            if not track:
+                log_error(f"Skipped item at index {idx}: No track data found.")
+                continue
+            artist = track['artists'][0]['name']
+            song_name = track['name']
+            year = track['album']['release_date'].split('-')[0]
+            track_url = track['external_urls']['spotify']
+            tracks.append((artist, song_name, year, track_url))
+            log_info(f"Track added: {artist} - {song_name} ({year})")
         log_info(f"Fetched {len(tracks)} tracks from the playlist.")
         return tracks
-    except requests.RequestException as e:
-        log_error(f"Failed to fetch playlist tracks: {e}")
+    except Exception as e:
+        log_error(f"Failed to fetch playlist tracks for ID: {playlist_id}")
+        log_error(f"Error Details: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            log_error(f"Response Status Code: {e.response.status_code}")
+            log_error(f"Response Content: {e.response.text}")
         raise

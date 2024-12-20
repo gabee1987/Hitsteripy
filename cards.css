@@ -10,78 +10,69 @@ body {
 }
 
 .page {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 6cm); /* 3 columns */
+    grid-auto-rows: 6cm; /* Automatically adjust row height */
+    gap: 1cm; /* Space between cards */
+    margin: auto; /* Center the grid */
+    justify-content: center; /* Center horizontally */
+    align-content: center; /* Center vertically */
 }
 
 .card {
-    width: 8.5cm;
-    height: 8.5cm;
-    margin: 0.5cm;
+    width: 6cm;
+    height: 6cm;
+    border: 1px dashed #ccc;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #000;
     position: relative;
-}
-
-.front {
-    color: black;
-    text-align: center;
-    padding: 0.1cm;
-}
-
-/* Artist Styling */
-.front .artist {
-    font-family: 'Oswald', sans-serif; /* A clean, condensed sans-serif font */
-    font-size: 1.5em;
-    font-weight: 500;
-    margin-top: 0.5cm;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-align: center;
-}
-
-/* Year Styling */
-.front .year {
-    font-family: 'Roboto', sans-serif; /* Updated to use Roboto Bold */
-    font-size: 5.5em;
-    font-weight: 700;
-    margin: 1.5cm 0;
-    /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); */
-}
-
-/* Song Name Styling */
-.front .song-name {
-    font-family: 'Lato', sans-serif; /* A modern sans-serif font with good readability */
-    font-size: 1.2em;
-    font-weight: 400;
-    margin-bottom: 0.5cm;
-}
-
-/* Serial Number Styling */
-.front .serial-number {
-    position: absolute; 
-    bottom: 0.1cm;      
-    left: 0.1cm;        
-    font-size: 0.8em;
-    color: white;
-}
-
-/* Back Card Styling */
-.back {
-    background: url('./assets/card_bg_04.png') no-repeat center center;
-    background-size: cover;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.front {
+    text-align: center;
+    padding: 0.5cm;
+    background: hsl(210, 50%, 90%); /* Fallback solid color */
+}
+
+.front .artist {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0.2cm;
+}
+
+.front .year {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: auto 0; /* Center vertically */
+}
+
+.front .song-name {
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 0.5cm;
+}
+
+.front .serial-number {
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 0.5cm;
+    left: 0.5cm;
+    color: #666;
+}
+
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('./assets/card_bg_04.png') no-repeat center center;
+    background-size: cover;
+}
+
 .back .qr-code {
-    width: 5cm;
-    height: 5cm;
-    box-shadow: rgba(0, 0, 0, 0.9) 0px 22px 70px 4px;
+    width: 4cm;
+    height: 4cm;
 }

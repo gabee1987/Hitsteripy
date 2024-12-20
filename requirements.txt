@@ -2,3 +2,5 @@ requests
 qrcode
 jinja2
 weasyprint
+spotipy
+dotenv

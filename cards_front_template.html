@@ -6,7 +6,7 @@
 <body>
 <div class="page">
     {% for track in tracks %}
-    <div class="card front" style="background: '{{ track.gradient }}';">
+    <div class="card front" style="background: {{ track.gradient }};">
         <div class="artist">{{ track.artist }}</div>
         <div class="year">{{ track.year }}</div>
         <div class="song-name">{{ track.song_name }}</div>

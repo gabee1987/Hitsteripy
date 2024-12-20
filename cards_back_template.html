@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="{{ css_file }}">
+    <link rel="stylesheet" href="{{ css_file }}">
 </head>
 <body>
-  <div class="page">
+<div class="page">
     {% for track in tracks %}
     <div class="card back">
-      <img class="qr-code" src="{{ track.qr_code }}" width="100" height="100">
+        <img class="qr-code" src="{{ track.qr_code }}" alt="QR Code">
     </div>
     {% endfor %}
-  </div>
+</div>
 </body>
 </html>
