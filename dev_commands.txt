@@ -1,0 +1,53 @@
+# ------------------------------
+#  VIRTUAL ENVIRONMENT COMMANDS
+# ------------------------------
+
+# 1. Create a new virtual environment (Windows).
+python -m venv env
+
+# 2. Activate the virtual environment (Windows).
+env\Scripts\activate
+
+# 3. (Alternative) Deactivate the environment.
+deactivate
+
+# ---------------------------------
+#  INSTALL DEPENDENCIES COMMANDS
+# ---------------------------------
+
+# Install from requirements.txt
+pip install -r requirements.txt
+
+# Freeze dependencies into requirements.txt
+pip freeze > requirements.txt
+
+# ---------------------------------
+#  RUNNING THE APPLICATION
+# ---------------------------------
+
+# Run the main Python module from your src folder
+python -m src.main
+
+# (Optional) If your module were named differently
+# python -m src.some_other_main
+
+# ---------------------------------
+#  LINT / TEST COMMANDS (EXAMPLES)
+# ---------------------------------
+
+# Lint with flake8 (if installed)
+flake8 src
+
+# Run tests if you have a tests/ folder and use pytest
+pytest tests
+
+# -------------------------------
+#  REFERENCE COMMANDS
+# -------------------------------
+
+# If using Git to commit changes
+git add .
+git commit -m "Your commit message"
+git push origin main
+
+# End of dev_commands.txt

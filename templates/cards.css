@@ -1,0 +1,74 @@
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.page {
+  display: grid;
+  grid-template-columns: repeat(3, 6cm); /* 3 columns, each card 6cm wide */
+  grid-auto-rows: 6cm; /* Each card is 6cm tall */
+  gap: 1cm; /* Gaps are exactly 1cm */
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+  page-break-inside: avoid;
+}
+
+.card {
+  width: 6cm;
+  height: 6cm;
+  border: none; /* Ensure no border affects dimensions */
+  box-sizing: border-box; /* Include padding in total width/height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.front {
+  text-align: center;
+  background: hsl(210, 50%, 90%);
+}
+
+.front .artist {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 0.2cm;
+}
+
+.front .year {
+  font-size: 3.5em;
+  font-weight: bold;
+  margin: auto 0;
+}
+
+.front .song-name {
+  font-size: 1em;
+  margin-bottom: 0.2cm;
+}
+
+.front .serial-number {
+  position: absolute;
+  bottom: 0.1cm;
+  left: 0.1cm;
+  font-size: 0.5em;
+  color: #333;
+}
+
+.back {
+  background: url("../assets/card_bg_04.png") no-repeat center center;
+  background-size: cover;
+}
+
+.back .qr-code {
+  width: 4cm;
+  height: 4cm;
+  display: block;
+  margin: auto;
+}

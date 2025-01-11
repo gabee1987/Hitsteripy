@@ -1,6 +1,7 @@
-requests
-qrcode
-jinja2
-weasyprint
-spotipy
-dotenv
+requests==2.28.2
+qrcode==7.3.1
+jinja2==3.1.2
+spotipy==2.23.0
+python-dotenv==1.0.0
+rich==13.3.2
+prompt-toolkit==3.0.36
