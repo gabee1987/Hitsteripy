@@ -28,13 +28,9 @@ def import_tracks(app_state, sp, playlist_url, track_count):
     output_csv = os.path.join(output_dir, csv_filename)
 
     # Fetch tracks
-    if track_count == "all":
-        limit = 5000  # or some big number
-    else:
-        limit = int(track_count)
+    track_data = fetch_playlist_tracks(app_state, sp, playlist_url, desired_count=track_count)
 
-    track_data = fetch_playlist_tracks(app_state, sp, playlist_url, limit=limit)
-
+    # Then proceed with writing the CSV, etc.
     with Progress() as progress:
         task = progress.add_task("Importing tracks...", total=len(track_data))
         with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
@@ -53,3 +49,4 @@ def import_tracks(app_state, sp, playlist_url, track_count):
     summary = f"{len(track_data)} tracks imported to {output_csv}"
     log_success(app_state, summary)
     return output_csv, summary
+

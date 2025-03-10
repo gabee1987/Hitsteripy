@@ -21,6 +21,7 @@ body {
 }
 
 .card {
+  position: relative;
   width: 6cm;
   height: 6cm;
   border: none; /* Ensure no border affects dimensions */
@@ -50,7 +51,7 @@ body {
 
 .front .song-name {
   font-size: 1em;
-  margin-bottom: 0.2cm;
+  margin-bottom: 0.25cm;
 }
 
 .front .serial-number {
