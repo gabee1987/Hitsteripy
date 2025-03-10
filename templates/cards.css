@@ -1,6 +1,6 @@
 @page {
-  size: A4;
-  margin: 1cm;
+  size: A4 portrait;
+  margin: 5mm;
 }
 
 body {
@@ -11,25 +11,30 @@ body {
 
 .page {
   display: grid;
-  grid-template-columns: repeat(3, 6cm); /* 3 columns, each card 6cm wide */
-  grid-auto-rows: 6cm; /* Each card is 6cm tall */
-  gap: 1cm; /* Gaps are exactly 1cm */
-  margin: auto;
+  grid-template-columns: repeat(3, 60mm); /* 3 columns of 60mm */
+  grid-template-rows: repeat(4, 60mm); /* 4 rows of 60mm */
+  gap: 0; /* No gaps for perfect alignment */
+
+  width: 180mm; /* 3 cards * 60mm */
+  height: 240mm; /* 4 cards * 60mm */
+
+  margin: 0 auto; /* Center the grid on the page */
   justify-content: center;
   align-content: center;
   page-break-inside: avoid;
+
+  border: 0.5pt dashed red; /* Debugging: Remove when done */
 }
 
 .card {
   position: relative;
-  width: 6cm;
-  height: 6cm;
-  border: none; /* Ensure no border affects dimensions */
-  box-sizing: border-box; /* Include padding in total width/height */
+  width: 60mm;
+  height: 60mm;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .front {
@@ -40,7 +45,7 @@ body {
 .front .artist {
   font-size: 1.2em;
   font-weight: bold;
-  margin-top: 0.2cm;
+  margin-top: 2mm;
 }
 
 .front .year {
@@ -51,13 +56,13 @@ body {
 
 .front .song-name {
   font-size: 1em;
-  margin-bottom: 0.25cm;
+  margin-bottom: 2.5mm;
 }
 
 .front .serial-number {
   position: absolute;
-  bottom: 0.1cm;
-  left: 0.1cm;
+  bottom: 1mm;
+  left: 1mm;
   font-size: 0.5em;
   color: #333;
 }
@@ -68,8 +73,8 @@ body {
 }
 
 .back .qr-code {
-  width: 4cm;
-  height: 4cm;
+  width: 40mm;
+  height: 40mm;
   display: block;
   margin: auto;
 }

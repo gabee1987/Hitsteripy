@@ -2,20 +2,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <title>Cards Back (Page {{ page_number }} of {{ total_pages }})</title>
     {{ css_embedded|safe }}
-    <title>Cards Back</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+    </style>
   </head>
   <body>
-    {% set counter = 0 %}
     <div class="page">
-      {% for track in tracks %} {% if counter > 0 and (counter % 9) == 0 %}
-    </div>
-    <div class="page" style="page-break-before: always">
-      {% endif %}
+      {% for track in tracks %}
       <div class="card back">
-        <img class="qr-code" src="{{ track.qr_code }}" alt="QR Code" />
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="{{ track.qr_data_uri }}" alt="QR Code" />
       </div>
-      {% set counter = counter + 1 %} {% endfor %}
+      {% endfor %}
     </div>
   </body>
 </html>

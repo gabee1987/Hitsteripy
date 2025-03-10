@@ -11,6 +11,19 @@ env\Scripts\activate
 # 3. (Alternative) Deactivate the environment.
 deactivate
 
+# Delete existing virtual environment
+rm -r env  
+
+# Create a new virtual environment
+python -m venv env  
+
+# Activate the virtual environment
+env\Scripts\activate  
+
+# Reinstall all dependencies
+pip install --no-cache-dir -r requirements.txt  
+
+
 # ---------------------------------
 #  INSTALL DEPENDENCIES COMMANDS
 # ---------------------------------
@@ -20,6 +33,9 @@ pip install -r requirements.txt
 
 # Freeze dependencies into requirements.txt
 pip freeze > requirements.txt
+
+# If [ERROR] Failed to generate QR code: cannot import name '_imaging' from 'PIL' (C:\Coding\Hitsteripy\env\Lib\site-packages\PIL\__init__.py) message appears when generating
+pip install --no-cache-dir --force-reinstall pillow
 
 # ---------------------------------
 #  RUNNING THE APPLICATION

@@ -1,5 +1,6 @@
 import os
 import csv
+import io
 import qrcode
 import random
 import base64
@@ -72,9 +73,27 @@ def embed_css_with_background(css_path, background_image_path):
         raise FileNotFoundError(f"Could not embed CSS or image. Error: {e}")
 
 
+def chunk_list(lst, size):
+    """Utility: Yield successive chunks of size `size` from list `lst`."""
+    for i in range(0, len(lst), size):
+        yield lst[i:i+size]
+
+def generate_qr_data_uri(url):
+    """Generate a QR code for `url` and return as a data URI (base64-encoded PNG)."""
+    import qrcode
+    import base64
+    import io
+
+    qr_img = qrcode.make(url)
+    buffer = io.BytesIO()
+    qr_img.save(buffer, format="PNG")
+    encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    return f"data:image/png;base64,{encoded}"
+
 def generate_html_cards(app_state, tracks_csv, output_dir):
     """
-    Generate front/back HTML cards with aligned grid layouts for printing.
+    Read tracks from CSV, chunk them in pages of 9 (or 12), and create multiple
+    front/back HTML files: e.g. cards_front_page1.html, cards_back_page1.html, etc.
 
     Args:
         app_state (dict): Application state for logging.
@@ -84,55 +103,85 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
     Returns:
         str: Summary message indicating successful generation.
     """
+    # Paths to your template files
     front_template_path = os.path.join("templates", "cards_front_template.html")
     back_template_path = os.path.join("templates", "cards_back_template.html")
     css_path = os.path.join("templates", "cards.css")
     background_image_path = os.path.join("assets", "card_bg_04.png")
 
-    # Embed CSS with the background image
+    # 1) Embed the CSS with background image as before
     embedded_css = embed_css_with_background(css_path, background_image_path)
 
-    # Prepare the QR codes directory
-    qr_dir = os.path.join(output_dir, "qrcodes")
-    os.makedirs(qr_dir, exist_ok=True)
-
-    # Process the tracks from the CSV file
-    tracks = []
+    # 2) Read the tracks CSV and build up a track list
+    all_tracks = []
     with open(tracks_csv, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            serial = row["Serial Number"]
-            qr_filename = f"{serial}.png"
-            qr_path = os.path.join(qr_dir, qr_filename)
-            generate_qr_code(app_state, row["Spotify URL"], qr_path)
+            # Instead of writing QR code to disk, let's embed them as data URIs
+            qr_data_uri = generate_qr_data_uri(row["Spotify URL"])
 
-            row["qr_code"] = f"qrcodes/{qr_filename}"
+            # Add random gradient
             row["gradient"] = generate_random_gradient()
-            row["serial_number"] = serial
-            row["artist"] = row["Artist"]
-            row["song_name"] = row["Song Name"]
-            row["year"] = row["Year"]
+            row["qr_data_uri"] = qr_data_uri
+            row["serial_number"] = row["Serial Number"]
+            row["artist"]       = row["Artist"]
+            row["song_name"]    = row["Song Name"]
+            row["year"]         = row["Year"]
 
-            tracks.append(row)
+            all_tracks.append(row)
 
-    # Render the front and back HTML
+    # 3) Load the Jinja2 templates *once*, for front and back
     with open(front_template_path, "r", encoding="utf-8") as f:
-        front_template = Template(f.read())
+        front_template_str = f.read()
+    front_template = Template(front_template_str)
+
     with open(back_template_path, "r", encoding="utf-8") as f:
-        back_template = Template(f.read())
+        back_template_str = f.read()
+    back_template = Template(back_template_str)
 
-    front_html = front_template.render(tracks=tracks, css_embedded=embedded_css)
-    back_html = back_template.render(tracks=tracks, css_embedded=embedded_css)
+    # 4) Decide how many cards per page
+    CARDS_PER_PAGE = 12  # a 3x4 arrangement
 
-    # Save the HTML files
-    front_file_path = os.path.join(output_dir, "cards_front.html")
-    back_file_path = os.path.join(output_dir, "cards_back.html")
+    # 5) Chunk the track list
+    pages = list(chunk_list(all_tracks, CARDS_PER_PAGE))
 
-    with open(front_file_path, "w", encoding="utf-8") as f:
-        f.write(front_html)
-    with open(back_file_path, "w", encoding="utf-8") as f:
-        f.write(back_html)
+    # 6) For each chunk -> generate a front HTML + back HTML
+    page_count = len(pages)
+    if page_count == 0:
+        log_error(app_state, "No tracks found in CSV, nothing to generate.")
+        return "No tracks to generate."
 
-    summary = f"HTML cards generated in {output_dir}"
+    # Prepare output
+    for i, page_tracks in enumerate(pages, start=1):
+        # Render front HTML for this chunk
+        front_html = front_template.render(
+            tracks=page_tracks,
+            css_embedded=embedded_css,
+            page_number=i,
+            total_pages=page_count
+        )
+        # Render back HTML for this chunk
+        back_html = back_template.render(
+            tracks=page_tracks,
+            css_embedded=embedded_css,
+            page_number=i,
+            total_pages=page_count
+        )
+
+        # Save each to a separate file
+        front_file_name = f"cards_front_page{i}.html"
+        back_file_name  = f"cards_back_page{i}.html"
+
+        front_path = os.path.join(output_dir, front_file_name)
+        back_path  = os.path.join(output_dir, back_file_name)
+
+        with open(front_path, "w", encoding="utf-8") as f:
+            f.write(front_html)
+        with open(back_path, "w", encoding="utf-8") as f:
+            f.write(back_html)
+
+        log_info(app_state, f"Generated page {i} front/back: {front_file_name}, {back_file_name}")
+
+    summary = f"{len(all_tracks)} tracks across {page_count} pages, saved in {output_dir}"
     log_success(app_state, summary)
     return summary

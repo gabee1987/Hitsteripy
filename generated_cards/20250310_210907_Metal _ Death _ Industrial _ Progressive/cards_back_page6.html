@@ -2,10 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <title>Cards Back (Page 6 of 9)</title>
     <style>
 @page {
-  size: A4;
-  margin: 1cm;
+  size: A4 portrait;
+  margin: 5mm;
 }
 
 body {
@@ -16,25 +17,30 @@ body {
 
 .page {
   display: grid;
-  grid-template-columns: repeat(3, 6cm); /* 3 columns, each card 6cm wide */
-  grid-auto-rows: 6cm; /* Each card is 6cm tall */
-  gap: 1cm; /* Gaps are exactly 1cm */
-  margin: auto;
+  grid-template-columns: repeat(3, 60mm); /* 3 columns of 60mm */
+  grid-template-rows: repeat(4, 60mm); /* 4 rows of 60mm */
+  gap: 0; /* No gaps for perfect alignment */
+
+  width: 180mm; /* 3 cards * 60mm */
+  height: 240mm; /* 4 cards * 60mm */
+
+  margin: 0 auto; /* Center the grid on the page */
   justify-content: center;
   align-content: center;
   page-break-inside: avoid;
+
+  border: 0.5pt dashed red; /* Debugging: Remove when done */
 }
 
 .card {
   position: relative;
-  width: 6cm;
-  height: 6cm;
-  border: none; /* Ensure no border affects dimensions */
-  box-sizing: border-box; /* Include padding in total width/height */
+  width: 60mm;
+  height: 60mm;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .front {
@@ -45,7 +51,7 @@ body {
 .front .artist {
   font-size: 1.2em;
   font-weight: bold;
-  margin-top: 0.2cm;
+  margin-top: 2mm;
 }
 
 .front .year {
@@ -56,13 +62,13 @@ body {
 
 .front .song-name {
   font-size: 1em;
-  margin-bottom: 0.25cm;
+  margin-bottom: 2.5mm;
 }
 
 .front .serial-number {
   position: absolute;
-  bottom: 0.1cm;
-  left: 0.1cm;
+  bottom: 1mm;
+  left: 1mm;
   font-size: 0.5em;
   color: #333;
 }
@@ -73,718 +79,83 @@ body {
 }
 
 .back .qr-code {
-  width: 4cm;
-  height: 4cm;
+  width: 40mm;
+  height: 40mm;
   display: block;
   margin: auto;
 }
 
 </style>
+    <style>
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+    </style>
   </head>
   <body>
-    
     <div class="page">
-       
-      <div class="card front" style="background: linear-gradient(272deg, #FFCC80 1%, #FFAB91 57%, #FF8A65 95%);">
-        <div class="artist">Nightwish</div>
-        <div class="year">2002</div>
-        <div class="song-name">Ever Dream</div>
-        <div class="serial-number">SN-001</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(323deg, #FFCC80 -16%, #FFAB91 49%, #FF8A65 97%);">
-        <div class="artist">Nightwish</div>
-        <div class="year">2004</div>
-        <div class="song-name">Planet Hell</div>
-        <div class="serial-number">SN-002</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(27deg, #C5CAE9 -11%, #7986CB 44%, #5C6BC0 86%);">
-        <div class="artist">Nico Vega</div>
-        <div class="year">2009</div>
-        <div class="song-name">Living Underground</div>
-        <div class="serial-number">SN-003</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(355deg, #81C784 10%, #AED581 57%, #DCE775 93%);">
-        <div class="artist">Nico Vega</div>
-        <div class="year">2013</div>
-        <div class="song-name">Beast - Extended Version</div>
-        <div class="serial-number">SN-004</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(63deg, #4DB6AC 13%, #4DD0E1 47%, #81D4FA 89%);">
-        <div class="artist">Bloodhound Gang</div>
-        <div class="year">1999</div>
-        <div class="song-name">Mope</div>
-        <div class="serial-number">SN-005</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(283deg, #FFB74D 9%, #FF8A65 51%, #F06292 99%);">
-        <div class="artist">In This Moment</div>
-        <div class="year">2012</div>
-        <div class="song-name">Whore</div>
-        <div class="serial-number">SN-006</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(32deg, #C5CAE9 -6%, #7986CB 45%, #5C6BC0 100%);">
-        <div class="artist">Whitechapel</div>
-        <div class="year">2008</div>
-        <div class="song-name">Possession</div>
-        <div class="serial-number">SN-007</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(330deg, #7986CB -10%, #64B5F6 46%, #4FC3F7 89%);">
-        <div class="artist">Five Finger Death Punch</div>
-        <div class="year">2009</div>
-        <div class="song-name">Bad Company</div>
-        <div class="serial-number">SN-008</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(245deg, #E57373 -9%, #F06292 40%, #BA68C8 86%);">
-        <div class="artist">Five Finger Death Punch</div>
-        <div class="year">2015</div>
-        <div class="song-name">This Is My War</div>
-        <div class="serial-number">SN-009</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(353deg, #FFCC80 -7%, #FFAB91 49%, #FF8A65 91%);">
-        <div class="artist">Set Your Goals</div>
-        <div class="year">2009</div>
-        <div class="song-name">the few that remain</div>
-        <div class="serial-number">SN-010</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(21deg, #FFB74D -7%, #FF8A65 45%, #F06292 91%);">
-        <div class="artist">In This Moment</div>
-        <div class="year">2012</div>
-        <div class="song-name">Blood</div>
-        <div class="serial-number">SN-011</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(342deg, #C5CAE9 -17%, #7986CB 47%, #5C6BC0 89%);">
-        <div class="artist">Trapt</div>
-        <div class="year">2002</div>
-        <div class="song-name">Headstrong</div>
-        <div class="serial-number">SN-012</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(342deg, #E57373 18%, #F06292 41%, #BA68C8 92%);">
-        <div class="artist">Shinedown</div>
-        <div class="year">2015</div>
-        <div class="song-name">Cut the Cord</div>
-        <div class="serial-number">SN-013</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(360deg, #7986CB -4%, #64B5F6 46%, #4FC3F7 95%);">
-        <div class="artist">Slipknot</div>
-        <div class="year">2008</div>
-        <div class="song-name">Psychosocial</div>
-        <div class="serial-number">SN-014</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(137deg, #C5CAE9 -19%, #7986CB 56%, #5C6BC0 84%);">
-        <div class="artist">In This Moment</div>
-        <div class="year">2014</div>
-        <div class="song-name">Sick Like Me</div>
-        <div class="serial-number">SN-015</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(92deg, #7986CB 8%, #64B5F6 47%, #4FC3F7 93%);">
-        <div class="artist">While She Sleeps</div>
-        <div class="year">2015</div>
-        <div class="song-name">New World Torture</div>
-        <div class="serial-number">SN-016</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(202deg, #81C784 20%, #AED581 57%, #DCE775 83%);">
-        <div class="artist">Avatarium</div>
-        <div class="year">2013</div>
-        <div class="song-name">Moonhorse</div>
-        <div class="serial-number">SN-017</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(111deg, #FFB74D -13%, #FF8A65 54%, #F06292 82%);">
-        <div class="artist">Amaranthe</div>
-        <div class="year">2014</div>
-        <div class="song-name">Dynamite</div>
-        <div class="serial-number">SN-018</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(20deg, #FFB74D 16%, #FF8A65 50%, #F06292 96%);">
-        <div class="artist">Kamelot</div>
-        <div class="year">2015</div>
-        <div class="song-name">Revolution</div>
-        <div class="serial-number">SN-019</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(288deg, #81C784 -19%, #AED581 46%, #DCE775 86%);">
-        <div class="artist">While She Sleeps</div>
-        <div class="year">2015</div>
-        <div class="song-name">Four Walls</div>
-        <div class="serial-number">SN-020</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(352deg, #FFB74D -16%, #FF8A65 57%, #F06292 92%);">
-        <div class="artist">Stone Sour</div>
-        <div class="year">2012</div>
-        <div class="song-name">Absolute Zero</div>
-        <div class="serial-number">SN-021</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(49deg, #4DB6AC 4%, #4DD0E1 56%, #81D4FA 98%);">
-        <div class="artist">Alestorm</div>
-        <div class="year">2014</div>
-        <div class="song-name">Drink</div>
-        <div class="serial-number">SN-022</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(168deg, #7986CB 19%, #64B5F6 54%, #4FC3F7 91%);">
-        <div class="artist">Whitechapel</div>
-        <div class="year">2014</div>
-        <div class="song-name">The Saw Is the Law</div>
-        <div class="serial-number">SN-023</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(203deg, #81C784 -20%, #AED581 41%, #DCE775 88%);">
-        <div class="artist">Slipknot</div>
-        <div class="year">2014</div>
-        <div class="song-name">Custer</div>
-        <div class="serial-number">SN-024</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(319deg, #FFCC80 -4%, #FFAB91 48%, #FF8A65 87%);">
-        <div class="artist">Bobaflex</div>
-        <div class="year">2011</div>
-        <div class="song-name">Bury Me With My Guns</div>
-        <div class="serial-number">SN-025</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(21deg, #FFB74D 2%, #FF8A65 50%, #F06292 86%);">
-        <div class="artist">Cypress Hill</div>
-        <div class="year">2000</div>
-        <div class="song-name">(Rock) Superstar (feat. Chino Moreno & Everlast)</div>
-        <div class="serial-number">SN-026</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(59deg, #81C784 -2%, #AED581 42%, #DCE775 83%);">
-        <div class="artist">Nico Vega</div>
-        <div class="year">2013</div>
-        <div class="song-name">Beast</div>
-        <div class="serial-number">SN-027</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(39deg, #FFB74D -9%, #FF8A65 58%, #F06292 84%);">
-        <div class="artist">Rob Zombie</div>
-        <div class="year">2003</div>
-        <div class="song-name">Two-Lane Blacktop</div>
-        <div class="serial-number">SN-028</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(215deg, #C5CAE9 -14%, #7986CB 40%, #5C6BC0 92%);">
-        <div class="artist">Static-X</div>
-        <div class="year">2003</div>
-        <div class="song-name">The Only</div>
-        <div class="serial-number">SN-029</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(19deg, #90A4AE 13%, #B0BEC5 42%, #CFD8DC 94%);">
-        <div class="artist">Fuel</div>
-        <div class="year">2005</div>
-        <div class="song-name">Quarter</div>
-        <div class="serial-number">SN-030</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(319deg, #C5CAE9 -1%, #7986CB 42%, #5C6BC0 94%);">
-        <div class="artist">Mudvayne</div>
-        <div class="year">2005</div>
-        <div class="song-name">Determined</div>
-        <div class="serial-number">SN-031</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(328deg, #FFB74D -13%, #FF8A65 46%, #F06292 81%);">
-        <div class="artist">Rise Against</div>
-        <div class="year">2012</div>
-        <div class="song-name">Give It All</div>
-        <div class="serial-number">SN-032</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(44deg, #E57373 11%, #F06292 55%, #BA68C8 99%);">
-        <div class="artist">Skindred</div>
-        <div class="year">2004</div>
-        <div class="song-name">Nobody</div>
-        <div class="serial-number">SN-033</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(294deg, #4DB6AC -11%, #4DD0E1 56%, #81D4FA 92%);">
-        <div class="artist">Spiderbait</div>
-        <div class="year">2004</div>
-        <div class="song-name">Black Betty - Single Edit</div>
-        <div class="serial-number">SN-034</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(233deg, #FFB74D 3%, #FF8A65 55%, #F06292 92%);">
-        <div class="artist">RDGLDGRN</div>
-        <div class="year">2013</div>
-        <div class="song-name">Double Dutch</div>
-        <div class="serial-number">SN-035</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(44deg, #4DB6AC -13%, #4DD0E1 53%, #81D4FA 100%);">
-        <div class="artist">Disturbed</div>
-        <div class="year">2005</div>
-        <div class="song-name">Decadence</div>
-        <div class="serial-number">SN-036</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(279deg, #4DB6AC 12%, #4DD0E1 55%, #81D4FA 87%);">
-        <div class="artist">Styles Of Beyond</div>
-        <div class="year">2007</div>
-        <div class="song-name">Nine Thou (Grant Mohrman Superstars Remix) (Clean)</div>
-        <div class="serial-number">SN-037</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(21deg, #E57373 -16%, #F06292 40%, #BA68C8 96%);">
-        <div class="artist">Band Of Skulls</div>
-        <div class="year">2012</div>
-        <div class="song-name">You're Not Pretty But You Got It Goin' On</div>
-        <div class="serial-number">SN-038</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(86deg, #7986CB -14%, #64B5F6 52%, #4FC3F7 81%);">
-        <div class="artist">Beware Of Darkness</div>
-        <div class="year">2013</div>
-        <div class="song-name">Howl</div>
-        <div class="serial-number">SN-039</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(171deg, #FFCC80 -3%, #FFAB91 45%, #FF8A65 82%);">
-        <div class="artist">Dead Sara</div>
-        <div class="year">2012</div>
-        <div class="song-name">Weatherman</div>
-        <div class="serial-number">SN-040</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(116deg, #FFCC80 -15%, #FFAB91 50%, #FF8A65 87%);">
-        <div class="artist">Heaven's Basement</div>
-        <div class="year">2013</div>
-        <div class="song-name">I Am Electric</div>
-        <div class="serial-number">SN-041</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(185deg, #FFB74D 17%, #FF8A65 54%, #F06292 84%);">
-        <div class="artist">Airbourne</div>
-        <div class="year">2007</div>
-        <div class="song-name">Blackjack</div>
-        <div class="serial-number">SN-042</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(208deg, #FFB74D 11%, #FF8A65 42%, #F06292 85%);">
-        <div class="artist">Junkie XL</div>
-        <div class="year">2007</div>
-        <div class="song-name">More - Junk O Rock Remix</div>
-        <div class="serial-number">SN-043</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(112deg, #C5CAE9 10%, #7986CB 45%, #5C6BC0 100%);">
-        <div class="artist">Blur</div>
-        <div class="year">2000</div>
-        <div class="song-name">Song 2</div>
-        <div class="serial-number">SN-044</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(80deg, #C5CAE9 -18%, #7986CB 41%, #5C6BC0 84%);">
-        <div class="artist">Guano Apes</div>
-        <div class="year">2006</div>
-        <div class="song-name">Open Your Eyes</div>
-        <div class="serial-number">SN-045</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(25deg, #7986CB 16%, #64B5F6 50%, #4FC3F7 83%);">
-        <div class="artist">Guano Apes</div>
-        <div class="year">2006</div>
-        <div class="song-name">Lords of the Boards</div>
-        <div class="serial-number">SN-046</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(66deg, #81C784 -10%, #AED581 55%, #DCE775 96%);">
-        <div class="artist">Guano Apes</div>
-        <div class="year">2006</div>
-        <div class="song-name">Big in Japan</div>
-        <div class="serial-number">SN-047</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(3deg, #FFCC80 9%, #FFAB91 42%, #FF8A65 90%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">2001</div>
-        <div class="song-name">Chop Suey!</div>
-        <div class="serial-number">SN-048</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(290deg, #FFB74D -8%, #FF8A65 56%, #F06292 84%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">2005</div>
-        <div class="song-name">B.Y.O.B.</div>
-        <div class="serial-number">SN-049</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(118deg, #E57373 -18%, #F06292 49%, #BA68C8 96%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">2005</div>
-        <div class="song-name">Lonely Day</div>
-        <div class="serial-number">SN-050</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(308deg, #C5CAE9 16%, #7986CB 50%, #5C6BC0 94%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">2005</div>
-        <div class="song-name">Violent Pornography</div>
-        <div class="serial-number">SN-051</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(329deg, #81C784 14%, #AED581 44%, #DCE775 92%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">2005</div>
-        <div class="song-name">Cigaro</div>
-        <div class="serial-number">SN-052</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(332deg, #90A4AE 20%, #B0BEC5 40%, #CFD8DC 92%);">
-        <div class="artist">Half Cocked</div>
-        <div class="year">2001</div>
-        <div class="song-name">Bad Reputation</div>
-        <div class="serial-number">SN-053</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(188deg, #FFCC80 19%, #FFAB91 46%, #FF8A65 83%);">
-        <div class="artist">Dream Theater</div>
-        <div class="year">2003</div>
-        <div class="song-name">Endless Sacrifice</div>
-        <div class="serial-number">SN-054</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(41deg, #7986CB -14%, #64B5F6 40%, #4FC3F7 90%);">
-        <div class="artist">Dream Theater</div>
-        <div class="year">2003</div>
-        <div class="song-name">As I Am</div>
-        <div class="serial-number">SN-055</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(310deg, #FFB74D 5%, #FF8A65 42%, #F06292 83%);">
-        <div class="artist">Dream Theater</div>
-        <div class="year">1999</div>
-        <div class="song-name">Scene Six: Home</div>
-        <div class="serial-number">SN-056</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(236deg, #FFB74D 11%, #FF8A65 50%, #F06292 84%);">
-        <div class="artist">Apocalyptica</div>
-        <div class="year">2007</div>
-        <div class="song-name">Stroke</div>
-        <div class="serial-number">SN-057</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(341deg, #7986CB -8%, #64B5F6 53%, #4FC3F7 82%);">
-        <div class="artist">Apocalyptica</div>
-        <div class="year">2003</div>
-        <div class="song-name">Heat</div>
-        <div class="serial-number">SN-058</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(209deg, #4DB6AC -14%, #4DD0E1 57%, #81D4FA 87%);">
-        <div class="artist">Nirvana</div>
-        <div class="year">1991</div>
-        <div class="song-name">Smells Like Teen Spirit</div>
-        <div class="serial-number">SN-059</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(127deg, #81C784 -16%, #AED581 57%, #DCE775 99%);">
-        <div class="artist">Nirvana</div>
-        <div class="year">1989</div>
-        <div class="song-name">Floyd The Barber - Remastered</div>
-        <div class="serial-number">SN-060</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(82deg, #7986CB 6%, #64B5F6 50%, #4FC3F7 89%);">
-        <div class="artist">System Of A Down</div>
-        <div class="year">1998</div>
-        <div class="song-name">Sugar</div>
-        <div class="serial-number">SN-061</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(295deg, #7986CB 10%, #64B5F6 51%, #4FC3F7 97%);">
-        <div class="artist">Rob Rock</div>
-        <div class="year">2000</div>
-        <div class="song-name">Judgement Day</div>
-        <div class="serial-number">SN-062</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(307deg, #7986CB -6%, #64B5F6 56%, #4FC3F7 95%);">
-        <div class="artist">Kittie</div>
-        <div class="year">2000</div>
-        <div class="song-name">Brackish</div>
-        <div class="serial-number">SN-063</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(47deg, #90A4AE -9%, #B0BEC5 55%, #CFD8DC 88%);">
-        <div class="artist">Kittie</div>
-        <div class="year">2000</div>
-        <div class="song-name">Charlotte</div>
-        <div class="serial-number">SN-064</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(290deg, #81C784 4%, #AED581 51%, #DCE775 97%);">
-        <div class="artist">Kittie</div>
-        <div class="year">2000</div>
-        <div class="song-name">Spit</div>
-        <div class="serial-number">SN-065</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(273deg, #81C784 8%, #AED581 54%, #DCE775 80%);">
-        <div class="artist">The Pretty Reckless</div>
-        <div class="year">2010</div>
-        <div class="song-name">Make Me Wanna Die</div>
-        <div class="serial-number">SN-066</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(79deg, #90A4AE 1%, #B0BEC5 51%, #CFD8DC 88%);">
-        <div class="artist">The Pretty Reckless</div>
-        <div class="year">2014</div>
-        <div class="song-name">Heaven Knows</div>
-        <div class="serial-number">SN-067</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(259deg, #81C784 -5%, #AED581 51%, #DCE775 87%);">
-        <div class="artist">The Pretty Reckless</div>
-        <div class="year">2010</div>
-        <div class="song-name">Goin' Down</div>
-        <div class="serial-number">SN-068</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(207deg, #FFCC80 -9%, #FFAB91 47%, #FF8A65 93%);">
-        <div class="artist">Stratovarius</div>
-        <div class="year">2014</div>
-        <div class="song-name">Soul of a Vagabond</div>
-        <div class="serial-number">SN-069</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(87deg, #4DB6AC 6%, #4DD0E1 55%, #81D4FA 90%);">
-        <div class="artist">In This Moment</div>
-        <div class="year">2012</div>
-        <div class="song-name">Adrenalize</div>
-        <div class="serial-number">SN-070</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(200deg, #81C784 5%, #AED581 40%, #DCE775 91%);">
-        <div class="artist">Linkin Park</div>
-        <div class="year">2003</div>
-        <div class="song-name">Numb</div>
-        <div class="serial-number">SN-071</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(298deg, #90A4AE -19%, #B0BEC5 54%, #CFD8DC 97%);">
-        <div class="artist">Linkin Park</div>
-        <div class="year">2003</div>
-        <div class="song-name">Don't Stay</div>
-        <div class="serial-number">SN-072</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(25deg, #FFB74D -10%, #FF8A65 47%, #F06292 93%);">
-        <div class="artist">Linkin Park</div>
-        <div class="year">2003</div>
-        <div class="song-name">Breaking the Habit</div>
-        <div class="serial-number">SN-073</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(179deg, #FFCC80 10%, #FFAB91 41%, #FF8A65 90%);">
-        <div class="artist">Korn</div>
-        <div class="year">1998</div>
-        <div class="song-name">Freak On a Leash</div>
-        <div class="serial-number">SN-074</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(241deg, #FFB74D 2%, #FF8A65 57%, #F06292 81%);">
-        <div class="artist">Korn</div>
-        <div class="year">1999</div>
-        <div class="song-name">Falling Away from Me</div>
-        <div class="serial-number">SN-075</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(230deg, #E57373 -15%, #F06292 46%, #BA68C8 90%);">
-        <div class="artist">Korn</div>
-        <div class="year">2004</div>
-        <div class="song-name">Y'all Want a Single</div>
-        <div class="serial-number">SN-076</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(144deg, #81C784 11%, #AED581 42%, #DCE775 83%);">
-        <div class="artist">Korn</div>
-        <div class="year">2004</div>
-        <div class="song-name">Did My Time</div>
-        <div class="serial-number">SN-077</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(87deg, #FFCC80 -14%, #FFAB91 43%, #FF8A65 95%);">
-        <div class="artist">Metallica</div>
-        <div class="year">1991</div>
-        <div class="song-name">Enter Sandman</div>
-        <div class="serial-number">SN-078</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(88deg, #7986CB -14%, #64B5F6 48%, #4FC3F7 97%);">
-        <div class="artist">Metallica</div>
-        <div class="year">1991</div>
-        <div class="song-name">Nothing Else Matters</div>
-        <div class="serial-number">SN-079</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(44deg, #4DB6AC 13%, #4DD0E1 49%, #81D4FA 99%);">
-        <div class="artist">Metallica</div>
-        <div class="year">1991</div>
-        <div class="song-name">The Unforgiven</div>
-        <div class="serial-number">SN-080</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(90deg, #C5CAE9 -11%, #7986CB 54%, #5C6BC0 82%);">
-        <div class="artist">Metallica</div>
-        <div class="year">1991</div>
-        <div class="song-name">Sad But True</div>
-        <div class="serial-number">SN-081</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(154deg, #FFB74D 2%, #FF8A65 60%, #F06292 84%);">
-        <div class="artist">Metallica</div>
-        <div class="year">1991</div>
-        <div class="song-name">Wherever I May Roam</div>
-        <div class="serial-number">SN-082</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(152deg, #4DB6AC 2%, #4DD0E1 60%, #81D4FA 92%);">
-        <div class="artist">Disturbed</div>
-        <div class="year">2005</div>
-        <div class="song-name">Stricken</div>
-        <div class="serial-number">SN-083</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(277deg, #C5CAE9 -1%, #7986CB 48%, #5C6BC0 94%);">
-        <div class="artist">Lacuna Coil</div>
-        <div class="year">2006</div>
-        <div class="song-name">Our Truth</div>
-        <div class="serial-number">SN-084</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(249deg, #FFCC80 8%, #FFAB91 42%, #FF8A65 96%);">
-        <div class="artist">PAIN</div>
-        <div class="year">2004</div>
-        <div class="song-name">Bye/Die</div>
-        <div class="serial-number">SN-085</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(358deg, #E57373 4%, #F06292 54%, #BA68C8 96%);">
-        <div class="artist">PAIN</div>
-        <div class="year">2004</div>
-        <div class="song-name">Tear It Up</div>
-        <div class="serial-number">SN-086</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(142deg, #FFCC80 -13%, #FFAB91 46%, #FF8A65 82%);">
-        <div class="artist">PAIN</div>
-        <div class="year">2002</div>
-        <div class="song-name">Shut Your Mouth</div>
-        <div class="serial-number">SN-087</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(344deg, #81C784 6%, #AED581 53%, #DCE775 97%);">
-        <div class="artist">PAIN</div>
-        <div class="year">2002</div>
-        <div class="song-name">Just Hate Me</div>
-        <div class="serial-number">SN-088</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(315deg, #FFCC80 0%, #FFAB91 56%, #FF8A65 84%);">
-        <div class="artist">Blindside</div>
-        <div class="year">2002</div>
-        <div class="song-name">Sleepwalking</div>
-        <div class="serial-number">SN-089</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(6deg, #E57373 -6%, #F06292 48%, #BA68C8 94%);">
-        <div class="artist">Blindside</div>
-        <div class="year">2002</div>
-        <div class="song-name">Pitiful</div>
-        <div class="serial-number">SN-090</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(149deg, #90A4AE -14%, #B0BEC5 48%, #CFD8DC 90%);">
-        <div class="artist">Blindside</div>
-        <div class="year">2002</div>
-        <div class="song-name">Caught a Glimpse</div>
-        <div class="serial-number">SN-091</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(328deg, #4DB6AC -1%, #4DD0E1 51%, #81D4FA 88%);">
-        <div class="artist">Children Of Bodom</div>
-        <div class="year">2003</div>
-        <div class="song-name">Bodom Beach Terror</div>
-        <div class="serial-number">SN-092</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(165deg, #81C784 12%, #AED581 58%, #DCE775 90%);">
-        <div class="artist">Children Of Bodom</div>
-        <div class="year">2003</div>
-        <div class="song-name">Angels Don't Kill</div>
-        <div class="serial-number">SN-093</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(223deg, #C5CAE9 -13%, #7986CB 54%, #5C6BC0 100%);">
-        <div class="artist">Children Of Bodom</div>
-        <div class="year">2003</div>
-        <div class="song-name">Needled 24 / 7</div>
-        <div class="serial-number">SN-094</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(308deg, #E57373 16%, #F06292 51%, #BA68C8 100%);">
-        <div class="artist">Children Of Bodom</div>
-        <div class="year">2003</div>
-        <div class="song-name">Sixpounder</div>
-        <div class="serial-number">SN-095</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(177deg, #C5CAE9 9%, #7986CB 57%, #5C6BC0 92%);">
-        <div class="artist">Rage Against The Machine</div>
-        <div class="year">1992</div>
-        <div class="song-name">Killing In The Name</div>
-        <div class="serial-number">SN-096</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(294deg, #7986CB 15%, #64B5F6 42%, #4FC3F7 99%);">
-        <div class="artist">Rage Against The Machine</div>
-        <div class="year">1992</div>
-        <div class="song-name">Bullet In The Head</div>
-        <div class="serial-number">SN-097</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(153deg, #90A4AE 12%, #B0BEC5 48%, #CFD8DC 80%);">
-        <div class="artist">Rage Against The Machine</div>
-        <div class="year">1992</div>
-        <div class="song-name">Know Your Enemy</div>
-        <div class="serial-number">SN-098</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(147deg, #4DB6AC 19%, #4DD0E1 51%, #81D4FA 96%);">
-        <div class="artist">Rage Against The Machine</div>
-        <div class="year">1992</div>
-        <div class="song-name">Wake Up</div>
-        <div class="serial-number">SN-099</div>
-      </div>
-        
-      <div class="card front" style="background: linear-gradient(50deg, #81C784 -7%, #AED581 41%, #DCE775 89%);">
-        <div class="artist">Rage Against The Machine</div>
-        <div class="year">2000</div>
-        <div class="song-name">Pistol Grip Pump</div>
-        <div class="serial-number">SN-100</div>
-      </div>
-       
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADK0lEQVR4nO1cW26jQBDshpHyiSUfIEfBN9gjWXukvQEcxQeIBJ+WsHrVj4Ek2o9FRiFkqj4mgFMyI1rd1Q/MQqvRV+s5RCAFQAqAFAApAFIApABIRyJxIBH1utDI7Et/eviR47LL7a0ESBuQWlEMdjQRX5pJr9ZCNKqBUG2fy6H2tA4gfSKN2QH0JztNxPx6Z74OahbuRtJn0iqAdAxS+tdF6V+nJP0v8xFbfVMF0kEtYkwTtwMJtzcmoebOcrA9VSBtYBGNPvaRiP10PE/mKLjtImrIcfZUgfQ8qbdMQiVEq/JSwdfbiytLvtDDU40NvmkdQNrJR8h8LjRqumli4lSbotBP5Uh7qkB6gkSeVbYykXSWblriqYtfy6eyoPvme6pAet4iKBtDLkqYlViNohbp8v/BIn4+ieIpDyYga7cDX8JAQllSq0dmJbCIUkit3FVCPFi6kdk8g5WpNBMRUkWx6+39N0DaoK9xafTBj5pc+Kk6ioFUW6ip3NLx9rQSIGWENCDTEXqki4gpy7mRMUtORI1ycg2JQpRLSTeL6H6ZvVjWAWVZlI8QmdPNSEYVOf/wT2ERhZD4Oqh6sM73mObKhD59r1nWgt5niRWqJpeplkzTFIU5iiWSwEeUUKFqcnHKPcNsFjYs4zEF9YgiSMn/tH8SsTZAWbvhfq0/aSe0eYsahfbFv/z2KpD2UpZNlpd6lFOP92oTVezSqtgUGYaXIuw0X7P4sdQoYBEFRA3WRWg8u2dgm6oj0tE6NjGhgWQ8Cx9iTxVIT5Mkag9WyrYU9EUsGbVpXJuYQV+jsOxziDDxYVxC4XP6SxBB1PjhJHqnGBV5qm4RDnOHA32N0nQEEdWTT9D1FyIbumWTFTqIu3RGv/2eKpA2fKeLWV/rawcbtnyw/Lbade514C2/0nRE7S3OD4NUc0scVewi3+Bhohfh/vSWxJdLmjQtnXiX26tA2pskNmXbuWaoha8aK1gTT3UjiBrlvdNF7XBWR2E6gkn67Bssdsgh9lSBtOE7XWw/FBBl61lHWK3KflPi6W9aB5C+nMT4ZTIHSAGQAiAFQAqAFAApABI5/gJvhW1yxAw5WAAAAABJRU5ErkJggg==" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADGElEQVR4nO1cbYqjQBCttoX92bnBHsXcYI+07M30KHOAQPw5oNRSH90xDAsRZR3T7/1wejQPbSzq41UlgWk1hmY9hwgkB0gOkBwgOUBygOQA6Uyk4GgXV8J19LNEeRWuhzzeSoC0A6ljwV3Xc8iHyNwn5nCVlWCHO60DSIeRRncAfhh/MPc0y7k5cG9upD3ZnlYBpH+RBn3x6TO48/hoXyC9ApBOSurukflPaM1b0HBxv/FNHu8VgLSF1PrfJDnCqCYQKVC662oKXU+k7oLPs6cGpO2kQSuJi/oIjxXhtyaao9rMnKuOzXdaB5AO8hG8OFNSCEqTRo3gHmTjnRqQTkEiqyo7KzylyNRVYis8me/x6aqg/+Z7akDagxTlXatTEBUiK1Q0XFSZIMrF6PY7rQFIh/kIniyFWApRSVeRbVWuwke8NYn8JSd5+xYrJkshuFfN0tyDmIUcVNuERVRQfXYfgZjGdgpSZsiKQsdzoI7nlrQYpXQLfIo9NSDtEzXYHYXED/2XHtmmewv4iPcntXkRWVQIiRiRabjcTKZyreoa7UPwERVZxNzy8KtIEQuNQqKGtLuI4vTfH68B6aCoUVoa1tewfFLjh8kTmm1qdEHUqKTWIDUBLzdtVYxBVSsrOGAR9fiIuFQcRKuyfNIOT2oFLKKWqMG20ghRJEzVKHy4Cip2TaQkw3PS57Te5120axmkYumChp9qGyXvPMmeVgGkjOwZ2EUJDRhFuPQBzAzkEVX1Pln7nGYHlj3k3qd+TpNPRI1qSCl3MyRMqI94TNXlvsaBj7cKIO3iI2LxBy5K+NW8Qq1RCYme8gTOmUJxCqZalaEa5BFvT6LlQARludIkqfRVzISPqKf3KcgvPl9bdjztDHxEdd/pojJGRx1/ynwEs05qZ+nqmMdbBZC2kNovZ9KtZWuFBv2qhnQ8tS9+mj01IO1pEV0/y1SEz0fQoI5jlAmrR4P8m++pAWnH73SxZA9Bpur09YtthOwjMB9RY61BpQu6aHKpFCGqlX4YmeVbkwJ+mcwAkgMkB0gOkBwgOUBygESGvwXcVlhuTMOsAAAAAElFTkSuQmCC" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADB0lEQVR4nO2cXW6rMBCFx4CURyN1AVkK2cFdU3cGS+kCroQfKyWaq/mxIVEfgsIVJZyjKiUkn4rF6HhmbBqYFmuoljNEgFyAXIBcgFyAXIBcgPYEBVdDNLT+iZ25pBCIUv7CZZPLWyhAK0Adi0Y5+pIQoFuwc31kDheq9XPe1ZiWCdADlNwAQjhfKVzSibnPzsC9WUbzCC0SoJ1C3Zfc+PgtRkHEzBIgv+fynhGgdaHITENoLA7UGdQj/sNfekKANoOi5AxyIMGg2QN/tp49aGyoW2x2eYsE6BWI5hkj1Uzd+NNL/oJlm798TBWgF6BGX3l2Jn4HppSPhrZWB9nTmCpAr3tEZy4g04SYgk0isVSk06fwiGNA3OuEIZmCdKis3NTmVGlYcS89im0ub6EAvT5r0PBHys3UElMcKZD8+FF9tZdubHcypgrQCpll9BnBpgmKV/MNdQufScxGMGscrNZgDwGtK0q5OaUViIgjeUQvzSlPIN0j3DxGTTlRfR6q1qhLmSHBEMUeNEBKlMg5eMRxIoLVIzQYNA787s8yCjMKRMS7QzTdeCr9SUsmNDasFVEsA7PGkTJLnucR82DQFMJWPRARbw9RrjnrbA+5UzmbJnSRSz/FrPH2EPlNJlFOIaaCI3e287fhEYfKI6jc/a54RClBZ00sRMQhao1rzhmsFUEllfS3PrEgIt4davx3kiWN1FCgOHLoxg/rVzKlD8025e0t8C7GVAFaA6pzF8L2WeruyputfepRCO3uxrREgB6gKCYgHmE3PsmTG7L5uhvzGvi0kWovY1okQHcQ39ca01ZbfVRDs4f8doIWCtA+n+liNlO4BWtYDa28FcsoK6M7GdNCAfphXYNzNTErRnXNq3gEao1j7bPsytrntD/CzqlybCAiDgalE4eLhMVnODEN57LIpUXI5pf3hACt0Y8o6nqtOf9qZ0Krjqs8FUo8nHknY6oArZhHcOlZ+pFNIr7PEl3sAz7TpbpfCJ/tmUBEvD0U8J/JTIBcgFyAXIBcgFyAXIDI9A+fZZMg5nQnRgAAAABJRU5ErkJggg==" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADOElEQVR4nO1cW46jMBDsBqT5BGkOMEcxN9gjrXKkuQEcJQdYCX9GAvWqHzZsvoLCbsK668MDSUpgqeWuLrcHCXZjrPZzAJxkcJLBSQYnGZxkcJLBSWcioaHRKxixARs6/j6mH/Qveb2dcNIBpECMiS/bWT/Cvr0h9rEB7KGW7+lUc9oHJ92RYl4AJBh4DFPNIbAgDbqMNPekXXDSOUlE14aDga8jIgSa3+n1HoKTjiRh3xLB+HVDGLua6NL9rSc9BCf9c1Jjf1tOEBFgY1iF70/A/As6z5wqJz1PGqWS6HiNiJw1rh8WASwmsIdFS40DnrQPTnrRGkH5njhhyADQ3pB43bAV5MknVU46BQm0qgxZQHIdqgO0WnLqlapNqVKHN59T5aRjSJQdB7ogIg1akS6owaBe1SFPehxOelnWiB2rSFEUPLa/Ggxrqoif84nmVDnpAGX5NaeUAOJL8cAaE+IH0YW1Balh9eyT9sFJL9IRNLQziDW5vRX1oPa2uNg5aN58TpWTns4aGKZFc4VliMjVZ0RNJ7bXET99jSiABKmamPNGhpQUskbIulHnNSLB14giqk/6Myxqq0j5VmIjfeYRUdAaAboegC0PCtnzYqii8Igog0QDlxSsHRGl6hADQltkLGtsN8xPMaedcNL9TtfEfkRttsPYQ7InuPAUP3vs6hlPMafKSUdkDVLhsDZSbbVk0haeNQpTliC3eYdDFYX8IJUeHhHlkBZUS4r7bTUOLqwoFNxs+dM9y6J0RGQjKqIpCu2qg5owXOUzsg2PMJxgTpWTDogIYNkonqW2SyxNGmb2MZsZw9SlPoo3n1PlpAOUJVhKMDdK1AOniSwwkvh0HfGfk2BbUtDaJ7MaViksxL10ZVncmS4I19xOySd4UPrrZF+ce2de83o74aRjz3RBTYjcmM8+JgQ+viEet/dQleVHTOshrry1JQbEZl/D/YgiSYFu3FjJ6uHKRz5zbMhRP9/XKI5Egxz9jdx5m3MFryB6kOPVr/cQnHTkmS4YfxBgPqDBpoS5EK4jyiDB9r8AAOsIth3kC9vIWLuwvfosgYT+n8kUTjI4yeAkg5MMTjI4yeAkUPwGJ/M0j/Q3eiUAAAAASUVORK5CYII=" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADNklEQVR4nO1cbWrkMAyV4kB/JjAH6FGSG+yRytwsPkoPUIh/Djho0Uc+OrsLzc7QmdR6P1zH4TExEdKTrBQJdiNW+zkATjI4yeAkg5MMTjI4yeCkI5HQUAP28x3sk60CzDO7e4g97YSTPpM6Yow8TWwWqQaIbVhkZ5D7dKg97YOTrkjJHAANMCGd2wmhowzQjewt1I3U16RdcNIxSPXVNcrQ0VQTpBYAmsyzRz1e5aRHWwTFPmSI7UgIDUeJdKKj7aly0h1IDRENPLFYMbGzmBCxtahBxDfu8Eu74KRHkaJkEvL2VVm+EHTvPIjaFNuQrOMxj7cPTro9atC6EF8vCNBckHMNMAkh8eMwe6qcdAMJNKvsRkkzeGjyJkLQwOGExkByQ7PU4cn3VDnpHqRA8ro1VmxKEZqWsqxItRrNcfa0B076Gynx2+eAIehGMws6v2bAvuHhT9JX4aQjRQ3SMMEBw6IG1ydlxspSY0rDHsSjRin1iHQiBM4wODiAFKe6YQKIvejO/EmBPvmeKifdbhHx1wXldWM3nthdBJOWXL1EaD54znXM//+lykmHIiWpQiwVB84rohyFphcieq8B31hyPurxdsFJd8k+g+WXXL00CaFigq4PQF1HlKAsB33xbBach0pRm0WlXOqaHpi7RRTkI0BihRQlVh9hVWyzEs81ysk+x2BOQeuTsM4kVsjpl0eNEkhgroBMM2xsQ81C69lLRdMt4qeTahlJh6SpBuehIUvbjBgDQjMCRfR6RAkk2KQU3Zp1yC1ZW+QlOw/3EeX4iFRnihgyAVy4xXKqKfa8xp110HwgxV5b7p5/T5WT7pF95iXNsMvVKcyZiGefhSlLEhNQFTnP5rX5uMstopyzT4P1Wc7D3Hu5rVG4RRShLBVLmWrxDAK5FANxiygwajTmD6yovQoMhucaP54EZhGjuYLNQcYVXEeUScI3+axvOQW12nUGOreBvKuuRFIjelK+4OFWmnb+5HNp1z7gnr4AJ/1DR5Cei+snXrOeXBMO1xHFdNWh/AncVWflSlmg2EpDXcgI6cQVze99vMpJ301C/89kCicZnGRwksFJBicZnGRwEih+A5ViiJREEnGnAAAAAElFTkSuQmCC" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADDElEQVR4nO1cWaqjUBCtUiGfCr2ALMXsLGRJvQNdShbwQD8DkWpquA791ZLw8ux7zodch0MUixpOlWGh3eiL/RwikAIgBUAKgBQAKQBSAKQjkThQEV/SGT9yGZmJxnTB5TjPtBMgbUmtKAZdjmoWY6XLUojqp68MW9I+gHQs0hgOQDqaWG7NxNSKGQO53zAP8rHb2wWQXiFVf+0z1c+KW5kqobEh6ZlIaDzUMxUgvZEknUaIW1MK81nEwsmSW7zzl/4JIH2MVItIp4tWk4l2mJiIJqY+xQqRFEQO80y7ANKW1Fsl0WjO4JnlSai9n4Svlm3S5KXGlrQPIB2DVNlWlgP9WV1B/WDqG3JHIZsLfv4zFSC9QCKvKtvBUgjd1M9VhIjdoRRbeZXa/fBnKkB6h0WUnkWmtx/ag2sUYS8hSsAicrAIMjVKoSqEW4RaiXmLcBnwERlZhFhwiAgxW0naXVsJLCIPErtsrRWGZpbezdBY4TqmyhOfvL2dAOkdtcb460lUf5kdCBOVSXwwCXOYKrHNC79UgHQkUn9+MF/v5ihUdtCcwcWp8STSmfPgEzpduVWfdWQPkUJ4grHknag1ciDR5sWTF5kuastcc66OwSIy0iNk1qAWH5GuikkJWERW3XBu75W2v8un6NgMabYZKefYMLW/MR+RWdQImLfw+JE0Sw0Y7jygR2QTNWRuZGyOLbrUcjEsIhsVu128gJ2apey5pQEfkQtJrH1xS9MxfDX3oMlErxOXmlTyRQdoPnN7OwHSO/IIivZFTFOtWhqpM4rqM7/qU+zFW/xIq3QstbtgEf89iWQLCkdhysTGUUCPyINEKbM0LC3O2TP4xIzlnbCIHEi0qiFkjhrLl1wrHVOBWiOnThetkonU5ljBmmHwEdmR2L/WMRXb3MM8WqdaFb4Ezu8rP7LBfJud0ajBfVPajL4DEzP5fdMlOkEXPXAbrZMH2wn/HBg+Ihcf0bsfKMkn6GisvM8hffOl9jIQe1P0m2+vAOm7SYx/JnOAFAApAFIApABIAZACIJHjDw8ml8gDVWEFAAAAAElFTkSuQmCC" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAAC/klEQVR4nO1bbYqjQBCt1sD+NDAHmKOYmy17Mz3KHGBAfwYcaqmq1+qEhR3BSeL0ez9Md+yHNhb12ZVUNqOvtnNESAJIAkgCSAJIAkgCSDoSKQEnkT6lJL2NZLSLY8wLLg95vY0gaQdSq4ZBJP0efDpJujSTSH8WSRep/b4eak/bQFJGfOnW5WCoVcTkwEaqOuUlfkNqDcnpnnxPFUl7ktpBRDuzJBe3Go1pi2950ldA0t1Jp5u5yviiyQQCf4y/VGTc4UkVSYciNWYNYviRXDPon3Ot2mUdsRiRw+xpE0jKWHuMYp7C8K9LXkA/ohCrocsf/es0K4pr0jAYjR5pTxVJO8Qa6tHnrA/ciJjpsIjUlYfblIhBqSN+MkniI6s5CSYWi0cBt8KD0TAsSEpQIoqRCIN2zexW2GiWkghLKRE/niT4yA1UAWQjFAXSVHF3tfjJ91SRtIcfMWFqchDRZ2iLlXowt4ISUUz0Wc+KImsL9yNsGj4mppSIcuoaGuULtxBxcXMCt4I6osBKl0S4uVS1UPOCgLDSVRKpt7xU+3ayjPVH0s4ulsVGrsqwJC4PsqdtICkDhkBcFbi2mD2KT3ojllBHFONZNrNYfK5quWdpiUtKRIGxxursTHiRS9QB3yJAiSgkQ6VwKpHAzmWOdXqCElFYpcvgHx4XxKErbRFLnnxPFUn75CwV+Qj7I85ZwtGMdax9lkUa7fBcc01+Et9HcXJqVQV95OttAkk7xRriU9gKVxRIW8dCHzHWKISkHl8aojej85ads92yA9khFq48HvJ6G0HSLtGnI5e/UQN35ZFT2ejhoI4orKdLTCxSSn4m/7RKXEp/zvnsg+xpG0jKuOnpUoQUuS7u9a3AfKiGOqKkDh5ph5dJrI1H+hQNPSYM76d1Y/CT76kiaW9SsgJotAOn12vKGuQbnvQ/kPTYnOXgZc/liOWcpMznI+hZFtjT5ViaNsLbzKlsSkR5PV1685vbuXCu6t6vV5EUIAkgCSAJIAkgCSAJuJ9n+RdHIed2kM406wAAAABJRU5ErkJggg==" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADK0lEQVR4nO1cW2rrQAyV7EA+HegCspTxDrqkcJfUHcRLyQIK9mcgRhc9bKfhhhtTQ+LMOR+D7cmhEVWlI41cFpqNppjPIQIpAFIApABIAZACIAVAWhOJAxviumOmhjfki6MbPlA/5evNBEgLkJIoWpWNu9jhQ9u7C3BNpe3LqmyaB5BuSN0YAKoLDVci1Ox6lqOHkc3KbJoFkO6QRE4b8mihXmJX4SCrtekhgHSHxJohmPdnpmZXaowoxWLEim16CCAFhkxQqUboiITozP4ofX1YoNBntrEWmwqQfk9qrJLYaYzotkLptHUP4ENbCtfUe6mxwE+aB5CeFCNkvJdmf2ZbiCqLFr1eyZpsKkD6BYm8qkxyoakO9UWrjqg5tepI7VClHl/cpgKkhTwiDc5gUjL0ZDVsjB+GR2ThEe3Pp4MfuFuktoy0gRjx9iSKP/tKs0blN2Oa0E6lLrprnQnEiMw8gjRXqFuYC9hVRBDrYoesgEfkoSNkDAXWkoq+lPtByIo43IBHvDWJbqsJotKF5hA3LHWEmIBHZBUjiEa5oPEg6g8TlZY/9ArKMp8YcbmKB5E/TDj8LDMQI7IhdVvXjlxb4WmTEjpAo53tcIvpwHwlNs0CSLe1hriejGdje0J946phhayRVa0hniauNyb4Q3hEVjoimTNYK2IKD96UiNIDOiKb+Yj0ZcffF70thalqiZq9BYZ+I01NxERxQv7yNhUgLUCqdGiK7Xfe83TMwYeTzmf7MccZyjKjGaruQyPDt8/EiEWGWISoqbfC1O2GOYoXt6kAaQEdQVZmxKnW0JIyKTkOTqBDldsMlejCVOm87WdviuLiwSMdTUeMs1YvblMB0oLvdFFqdYzOUKlwsNG6zhxn3FiFTTMB0r13ukhrDZ23laPO4Do0k4wve63FpnkA6R8zVMmUgp+GK4bDDYedh6IfkSOp5/CN01YH88euVad16PO/3v8B0pIk0cMNe0FDjtWZ5Y/minTzqt/KbHoIIN15p4uaT68+/TGntlcJ8Q0dkV0/whDTMXY9HWkEhrFL6Ii3JjH+M5kDpABIAZACIAVACoAUAIkcfwEYGGzPx0K2iAAAAABJRU5ErkJggg==" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADC0lEQVR4nO1cQY6jQAwsA9IcG2kfkKeQn0X7pP0BPCUPGAmOkUBe2e0GktOgRENIuw4MoSmFVqzqstsMMTajK7ZzACcZnGRwksFJBicZnGRw0pFIZKhAVNsInQe7CqQzOu/yeBvhpBeQGhb0ctZrMFRAd2IGwijjpY7zoea0DU56IA0mANxiIv5bT4TmWkEPOqAK8kDaBCcdg1Q9fCY9NDxVjGEidDXAGPZ6vMJJe5O4Dczo6pKJTiN0rTD38OJv+hGctJtGBPEIg/kINO0UBwgoR9UIPs6cCic9T+o0k6iTqcTwxWiuclCjiSllHU9/0zY46ddJ4HsAQf+OabS3NGOF9s3nVDjp+XrEeSBSodBcYzXenW5Sj5BktJ68HpETqWS6iEboWiHO0q4Pmn1KlAxfzO1ej7cFTnreWXJXl/LrS70y3ChGQ/PvzwiE74qBsSKEb0LTHmBOhZOe9hGQ0iS3chALsbqmdcx5NNY23Udk4CxbOW16Wyusni32Miajeku0nB4RmeQafSm/eRIFiY1HtZCg8Yj4fBLsRw5iKkUjLBjudEOEwjUiExKiCjQxLKQKEWYLIRqhutHK3qcePCKyyTWoHAmQxPNcSVyIo9DUQ0uYaQvs1x+vcNJeGtFLCKRsImnE3BChAeK5Rl65Rhk7ZtIKkQrY5h4s6/BV4/NJWHYzYI1US2zoaPIWKh6uETk5S+jHVYYRnaWOevaZs48YrT5pyjDnGrOMeERkU6HC3IO7xIHeFO6rl28+p8JJr6pQsSnDUr1MplIVxCtUma0aLEIRL653OOZ98ZSRekRkQGIzDsvhRlEypE9m8Z07Pd5GOOkV2WdEspexlC2I7mFOPVwjstrX4LTTtXqTa+6KiHe7s8zHR8D2wNVjLhphsWFq4RqRH4kuV22/FaQd8iUZ9c7b/N7yg7zLQwjT/aaodGWfy/Qaz5vPqXDSC30Ex4YILUrc+07f18j0na6Lttqmroj4JnD0FvOux0HmtA1OMlgn/ib4fyZLcJLBSQYnGZxkcJLBSYZPJP0HPazGlVvHQUgAAAAASUVORK5CYII=" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADHklEQVR4nO1bW47iMBBsJ5HmM0gcgKOYG+yRVnukuUFyFA6wUvKJZNSrfjgJfE0GZiG46iOQRwmstNrV1XZgWo2+Ws8hAskBkgMkB0gOkBwgOUDaEik4msWdfC0EojF/PT7l760ESA8gRRYMIhs1BOgSiFpm7lrmcKRa7/OmxrQOIDlyVhh3RPGTKMRhRyF+7lkyg9wJxDTKB9VpG2OqQHokqT8k4q49azQQdxITxx/5pa8ApOeTok0djcRBzeHYSoD8yC99BSA9jdSKZiAPBjv9s9MAkbCQbMGcNjamVQDpWkf0NknUIib2KcRTk0Ic9iIw9smF5mbGVIF0d0Tw4kp7DiolidpE1O8o8PUDLz+mCqQ7SGRVZRT1QFpkDjXPhaedLu4KuhcfUwXS3STu7HVbUsgVxjg5E/bINHVsYkwrAdJNjuBkZcbSiGo1eXjKmO8iR7w1ifwltz4jcCfqQSSE5Q059ZmEZP5ARBSjI+qsGXK2WHyzANHYQES8O4l8mmjzO58UhYoJO1gcyNPIESXVGiw5Yp41TD24daViAjmiKFLN2tJQ71ovMA+XsDSwxw/0Pgsg0aK4iOY9SKLQCWNRa4iisJoEOaIMz7I/yuGgfkQtE8ZAIZ7CZGE2xG50/9+/V4H0tBxR57nC4DWnlaWqLawcQY4oycWO8zd7+9rsnNQmXOziPEuaSorZlzLhkEsPRERBfgTn+tK6WoLsXc+NLyjL0jxLohvNMJce8CNKjAhFnis8H5jkzBWpAhHxzqRmeTLuk5SYskFjn3RdFdtCKmmER7402xhTBdL9vc8JV5lhcq2uyhHkiLcmNXoMflYnNaJYkgL3vwYK/UHW6dtiS+zXKKr6FEz5wJGtiPkackQxpHHa1Clr6WxpBJ9D+H36YN/5ZzbVc/7eKoD0MGUp6A8p9zpC7nVYm6O7bGRMFUiPjIgoL77f/aUgcUA0Nkl3gDKNshf0+79UgbRJHcHz8inra0x2JfoaZZDIIsIx15xytP0as10Jz7LEPV1880mtd8kX8fLqY6pAMoDkAMkBkgMkB0gOkBzfUpb/APKsryAkXymfAAAAAElFTkSuQmCC" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAAC+ElEQVR4nO1cW46jMBDshkj5JNIeYI7i3GCPtNqbwVHmACOFz5VAveqHDcnXsomGYVz1gQieUrCm1a5qt8NCmzE02zlEIAVACoAUACkAUgCkAEhHInHgRHzNI/kZM9GYb6/HmdNGgHRPSqK4qWy8EPF1PBFRJ0LUTTre2rgcak7bANIDaYwEIHKbWX5fZqakAaIXG7AM8kDaBJCOQTo9fGa7JJlPQuOF8mWv12tA2pskva4Vw6UV5rdYMBZtsfvr/RNAegWpE5Feb2KtmC1ZuKwwiMj0km/aBJD2Ig3mJBZROZ6F0vtZ+JcGCNGcXcc+r7cNID1DIrkHqblY8oH7D3ciBf0Xn1MD0vP1iOvIbIlCemrXWx3Dm4aA5o3hMqMeUU2OoHRrJRclWnF56aPZglqoIEfUFRGGJFMYDn0mvS4iJjmtVmVBg4ioISIk1IMlhbWiWHIEIqIq0niWuHRTyIpSrjRvui5KHGROmwBSRkgDyupBs4UvGGY40l22gI6op4rdfTCld85la5qIBssK449JNHlw6uUgc2pAeo2yFHcYJiW9KLHsfcJrVEOi+Cd3Zjc1LKwe0RUfmoMhrySIiJrcZ5eFQ1gPG7C/Wo8iIqqqR4gvDqYiPUdEUcItKHJETauG2CWsh8VG3vFcVTQRETV1zKTsNShJtM1w6lth6v6wDExqQj739RqQdqxZUtGTMbSUsovkhI6oZzd8iu2LpZ5ddkFdR0BZVlezpLLJFfWIYjdNaK5UxhefUwPS0zqCVTiYhGBrvrX2KX0uWrP0blzqtBv3/7+pAem4PVQUK8SykizNVcgR35xE65M5ZKVJ2/4u7RLlY6laISLq8BoKj4McFlHULjki3yEivjWJLBSopIKHrrocG7ltxoCIqInEV++YsXOfy5HPMKPovK3vlB8RzScZfn6owWjtdJef/HNl+dmv14C0t46QqEaVI14+kMUEdESFXkNihYjtLu/FRn9ENSTGL5M5QAqAFAApAFIApABIAZDI8Rdm2dj1ri+SGAAAAABJRU5ErkJggg==" alt="QR Code" />
+      </div>
+      
+      <div class="card back">
+        <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
+        <img class="qr-code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADMklEQVR4nO1bW46rMAy1IdJ8BmkW0KXADu6SrmZJswNYShcwEnxWovKVHQfa+Sq3nWlRzvlow+OIRnHtY8ew0GYM1XYOEUgOkBwgOUBygOQAyQHSnkjsCERD41fyOWaiKQ+7p/y8jQDpAaRWFKMOJzUBOjNRFJGeauGOarsuu5rTNoDkCP49NUTtJxG3Y0Pcfr6L2gYRxS8WmoiYqJ73MacKpIeSoq57PKk1EEk/hR970g0A6QVIk4oJDmSagbs4p9EPPOkGgPS0qBFVI0xafmrqmSmOaaSXxNyF7GdOFUj3kwbLJDTNaFVetsdA/HdUH5GixjlnHXc/aRtAepKPkIszWUKYopChUU1pHuTOJ1Ug7YJEKatsLfG0JNNGlnjqh4z11VVF/+JzqkB6BKnWtZ5NPWgVwgIGMw3NOWcdGjpQoSpHWZ5Yhk7jRxw1TlgpwkYqNPVDCxWyizlVIN0fNShq6LCQsEgILVfaoY3WmxE1irAIstX3hfeEQ4OI3dKbgaxG8+JzqkB6xL7GSVOKE9vqJx/xoRtfVsJsj29C7RHZZ0m5hsh1mjFfJhzJeaiVIGoUZRH9Ehx89d1brDEFFlGQspxVPXjtwfWkCQc957tf0BElkMj/9pRNIPmDZAwuLy2cpCQEFlGKRcjo5cosHPSCnlsOk/NA1Cirih0tLmj8SEu/yksXE/ARxex0DYc5CE1hlqH5ItGWKqHJGqmCWkMttkOOmmVZPqI195C8xSIlLXTkIAIfUdC+xqw+oiEaDqJ9lm9etrYuGgVb/eq3f14F0lNJUfOKI6fCJXfWJ5Oa9dU9HMMe53QrQPoeNepcs1SkKsTaLmFAzbKo7DMjb4DmPa8lw8hSAxZR2Dtd8mEtMmnPy+xAD1OzpWvMncxpI0DKuPAMkmPFRRudlSLMRxjgI8rKPsfcGOMVaytgL/Ej2wYsojBSdAOx/gjmw1KZQK5RBCl8P9H252DlCX+Np9Oa5cRamcB7nyW+0yXpcAo6OgdrxJXhT+rB/f2fV4H0JB3huOqzTAWIJDDsPtQjSnynS66+rUl7OVw05ovPqQIpASQHSA6QHCA5QHKA5PgvZfkPLHNeWYah+QoAAAAASUVORK5CYII=" alt="QR Code" />
+      </div>
+      
     </div>
   </body>
 </html>
