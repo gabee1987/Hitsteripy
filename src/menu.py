@@ -5,6 +5,7 @@ from prompt_toolkit.layout.containers import HSplit, Window
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.styles import Style
 from rich.console import Console
+import os
 
 console = Console()
 
@@ -14,6 +15,7 @@ MENU_OPTIONS = [
     ("🎼", "Set Number of Tracks"),
     ("📂", "Import Tracks"),
     ("📇", "Generate Cards"),
+    ("🪵", "View Logs"),
     ("❓", "Help / Usage"),
     ("❌", "Quit")
 ]
@@ -40,11 +42,18 @@ def create_main_menu(app_state):
         ]
 
     def render_footer():
-        """Render the footer with the playlist name and recent logs."""
+        """Render the footer with the playlist name, track count, and recent logs."""
         playlist_name = app_state.get("playlist_name", "No playlist selected")
+        track_count = app_state.get("track_count", "N/A")  # might be 'all' or a number or None
         logs = app_state.get("logs", [])[-3:]  # Show last 3 logs
-        footer_lines = [f"🎵 Playlist: {playlist_name}"] + logs
+
+        footer_lines = [
+            f"🎵 Playlist: {playlist_name}",
+            f"🎼 Track Count: {track_count}",
+        ] + logs
+
         return "\n".join(footer_lines)
+
 
 
     def render_menu():
@@ -209,3 +218,91 @@ def select_track_count(app_state, track_count_history):
         return user_val
     else:
         return quick_picks[choice]
+    
+def select_imported_csv_file():
+    """
+    Show a submenu listing all CSV files in 'imported_tracks'.
+    Return the full path to the selected CSV file, or None if user cancels.
+    """
+    files = find_imported_csv_files()
+
+    if not files:
+        # No CSV files found
+        return None
+
+    selected_index = [0]
+    options = [f[0] for f in files]  # The labels from the (label, path) pairs
+
+    style = Style.from_dict({
+        "menu": "bg:#4c566a #d8dee9",
+        "menu-selected": "bg:#88c0d0 #2e3440 bold",
+    })
+
+    def render_menu():
+        lines = []
+        for i, opt in enumerate(options):
+            if i == selected_index[0]:
+                lines.append(("class:menu-selected", opt + "\n"))
+            else:
+                lines.append(("class:menu", opt + "\n"))
+        return lines
+
+    kb = KeyBindings()
+
+    @kb.add("up")
+    def move_up(event):
+        selected_index[0] = (selected_index[0] - 1) % len(options)
+
+    @kb.add("down")
+    def move_down(event):
+        selected_index[0] = (selected_index[0] + 1) % len(options)
+
+    @kb.add("enter")
+    def select_option(event):
+        event.app.exit(result=selected_index[0])
+
+    @kb.add("escape")
+    @kb.add("c-c")
+    def cancel(event):
+        event.app.exit(result=None)
+
+    layout = Layout(Window(FormattedTextControl(render_menu), style="class:menu"))
+    app = Application(layout=layout, key_bindings=kb, full_screen=True, style=style)
+    choice = app.run()
+
+    if choice is None:
+        return None
+
+    # Return the path of the chosen file
+    chosen_label, chosen_path = files[choice]
+    return chosen_path
+
+def find_imported_csv_files():
+    """
+    Scan the 'imported_tracks' folder for any CSV files in subdirectories.
+    Returns a list of tuples (label, csv_path), e.g.
+      [
+        ("20250310_183133_100 -> Metal  Death  Industrial  Progressive_tracks.csv",
+         "imported_tracks/20250310_183133_100/Metal  Death  Industrial  Progressive_tracks.csv"),
+        ...
+      ]
+    """
+    base_dir = "imported_tracks"
+    if not os.path.isdir(base_dir):
+        return []
+
+    results = []
+    for subdir_name in os.listdir(base_dir):
+        subdir_path = os.path.join(base_dir, subdir_name)
+        if not os.path.isdir(subdir_path):
+            continue
+
+        # Look for CSV files in this subdir
+        for file_name in os.listdir(subdir_path):
+            if file_name.lower().endswith(".csv"):
+                csv_path = os.path.join(subdir_path, file_name)
+                label = f"{subdir_name} -> {file_name}"
+                results.append((label, csv_path))
+
+    return results
+

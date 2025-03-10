@@ -124,27 +124,47 @@ def sanitize_filename(name):
 
 def do_generate_cards(app_state):
     """
-    Generate front/back cards from the imported tracks.
+    Generate front/back cards from a selected CSV file.
     """
-    if not app_state["imported_tracks_file"]:
-        log_error(app_state, "No imported tracks found. Please import tracks first.")
+    from src.menu import select_imported_csv_file
+    from src.logger import log_error, log_success
+
+    # Let the user pick a CSV file from the 'imported_tracks' folder
+    csv_path = select_imported_csv_file()
+    if not csv_path:
+        log_error(app_state, "No imported CSV files found or selection cancelled. "
+                             "Please import tracks first.")
         return
+
+    # They picked a file. We'll use that for generation.
+    app_state["imported_tracks_file"] = csv_path
 
     try:
         # Format date and sanitize playlist name
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        sanitized_name = sanitize_filename(app_state["playlist_name"] or "Unknown_Playlist")
+        sanitized_name = sanitize_filename(app_state.get("playlist_name") or "Unknown_Playlist")
         output_dir = os.path.join("generated_cards", f"{timestamp}_{sanitized_name}")
 
-        # Ensure output directory exists
         os.makedirs(output_dir, exist_ok=True)
 
         # Generate HTML cards
-        summary = generate_html_cards(app_state, app_state["imported_tracks_file"], output_dir)
+        summary = generate_html_cards(app_state, csv_path, output_dir)
         log_success(app_state, summary)
     except Exception as e:
         log_error(app_state, f"Failed to generate cards: {e}")
 
+def do_view_logs(app_state):
+    """
+    Displays the entire log history stored in app_state["logs"].
+    """
+    console.print("[bold yellow]Application Logs:[/bold yellow]\n")
+    if not app_state["logs"]:
+        console.print("[italic]No logs recorded yet.[/italic]")
+    else:
+        for entry in app_state["logs"]:
+            console.print(entry)
+    console.print("\n[bold green]Press Enter to return to main menu...[/bold green]")
+    console.input("")
 
 def main():
     app_state = {
@@ -177,19 +197,22 @@ def main():
             do_import_tracks(app_state)
         elif result == 3:  # 📇 Generate Cards
             do_generate_cards(app_state)
-        elif result == 4:  # ❓ Help / Usage
+        elif result == 4:  # 🪵 View Logs (NEW)
+            do_view_logs(app_state)
+        elif result == 5:  # ❓ Help / Usage
             console.print("[bold cyan]How to Use This App:[/bold cyan]")
             console.print(
                 """
-[bold green]Steps:[/bold green]
-1. Set a Spotify Playlist URL or reuse a previously saved one.
-2. Choose the number of tracks to import (or all available tracks).
-3. Import tracks, which are saved as CSV files in `imported_tracks/`.
-4. Generate printable front/back cards (HTML) in `generated_cards/`.
-5. Print the cards.
-"""
+    [bold green]Steps:[/bold green]
+    1. Set a Spotify Playlist URL or reuse a previously saved one.
+    2. Choose the number of tracks to import (or all available tracks).
+    3. Import tracks, which are saved as CSV files in imported_tracks/.
+    4. Generate printable front/back cards (HTML) in generated_cards/.
+    5. Print the cards.
+    """
             )
             console.input("[bold green]Press Enter to return to the main menu.[/bold green]")
+
 
 if __name__ == "__main__":
     main()
