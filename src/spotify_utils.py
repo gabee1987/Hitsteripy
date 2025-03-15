@@ -43,8 +43,9 @@ def fetch_playlist_tracks(app_state, sp, playlist_url, desired_count=100):
     desired_count can be an integer or the string 'all'.
     If desired_count > 100, we fetch multiple times in chunks of 100.
     """
-    from .logger import log_info
+    from .logger import log_info, log_error
     from .spotify_utils import extract_id_from_url
+    import time
 
     log_info(app_state, f"Fetching tracks from playlist: {playlist_url}")
     playlist_id = extract_id_from_url(playlist_url)
@@ -61,41 +62,60 @@ def fetch_playlist_tracks(app_state, sp, playlist_url, desired_count=100):
     batch_size = 100  # Max Spotify limit per request
 
     while True:
-        # Calculate how many tracks are still needed
-        remaining = desired_count - len(all_tracks)
-        if remaining <= 0:
-            break  # We already fetched enough
+        try:
+            # Calculate how many tracks are still needed
+            remaining = desired_count - len(all_tracks)
+            if remaining <= 0:
+                break  # We already fetched enough
 
-        current_limit = min(batch_size, remaining)
+            current_limit = min(batch_size, remaining)  # Ensure we don’t fetch more than needed
 
-        log_info(app_state, f"Batch fetch: offset={offset}, limit={current_limit}")
+            log_info(app_state, f"Batch fetch: offset={offset}, limit={current_limit}")
 
-        results = sp.playlist_items(
-            playlist_id,
-            limit=current_limit,
-            offset=offset
-        )
+            results = sp.playlist_items(
+                playlist_id,
+                limit=current_limit,
+                offset=offset
+            )
 
-        items = results.get("items", [])
-        if not items:
-            break  # No more items returned
+            if "items" not in results:
+                log_error(app_state, f"Unexpected API response: {results}")
+                break  # Stop if the response is invalid
 
-        for item in items:
-            track = item.get("track")
-            if track:
+            items = results.get("items", [])
+            if not items:
+                break  # No more tracks
+
+            for item in items:
+                track = item.get("track")
+                if not track:
+                    continue
+                # Skip the track if it's marked as not playable or missing its Spotify URL.
+                if track.get("is_playable") is False or not track.get("external_urls", {}).get("spotify"):
+                    continue
                 all_tracks.append({
                     "artist": track["artists"][0]["name"],
                     "song_name": track["name"],
-                    "year": track["album"]["release_date"].split("-")[0],
+                    "year": (track["album"].get("release_date") or "Unknown").split("-")[0],
                     "url": track["external_urls"]["spotify"]
                 })
 
-        offset += current_limit
 
-        if results.get("next") is None:
-            break  # No more pages
+            offset += current_limit
+
+            # **Wait to prevent API rate limiting**
+            time.sleep(0.2)  # Wait 200ms before the next request
+
+            # **Stop if there's no more data**
+            if results.get("next") is None:
+                break
+
+        except Exception as e:
+            log_error(app_state, f"Error during fetch: {e}")
+            break
 
     log_info(app_state, f"Fetched {len(all_tracks)} tracks from the playlist.")
     return all_tracks
+
 
 

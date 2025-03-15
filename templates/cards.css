@@ -23,7 +23,7 @@ body {
   align-content: center;
   page-break-inside: avoid;
 
-  border: 0.5pt dashed red; /* Debugging: Remove when done */
+  /* border: 0.5pt dashed red; */
 }
 
 .card {
@@ -68,13 +68,15 @@ body {
 }
 
 .back {
-  background: url("../assets/card_bg_04.png") no-repeat center center;
+  background: url("../assets/card_bg_06.png") no-repeat center center;
   background-size: cover;
 }
 
 .back .qr-code {
-  width: 40mm;
-  height: 40mm;
+  width: 25mm;
+  height: 25mm;
+  /* border-radius: 50%; */
+  object-fit: cover; /* Ensures the image covers the element without distortion */
   display: block;
   margin: auto;
 }
