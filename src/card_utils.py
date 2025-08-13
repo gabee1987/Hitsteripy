@@ -73,7 +73,7 @@ def generate_custom_qr_data_uri(
         border=2,
         fill_color="black",
         back_color=(255, 255, 255),  # White background as RGB tuple
-        output_size=(150, 150)):
+        output_size=(300, 300)):
     """
     Generate a square QR code for `url` with a white background and customizable parameters.
     Returns a data URI (Base64-encoded PNG).
@@ -178,7 +178,15 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
      # 5) Chunk the track list
     pages = list(chunk_list(all_tracks, CARDS_PER_PAGE))
 
-    # 6) For each chunk -> generate a front HTML + back HTML
+    # 6)Mirror the order of items within each row
+    def mirror_columns_per_row(items, columns=3):
+        """Mirror left↔right order within each visual row, keeping row order."""
+        mirrored = []
+        for row in chunk_list(items, columns):
+            mirrored.extend(list(reversed(row)))
+        return mirrored
+
+    # 7) For each chunk -> generate a front HTML + back HTML
     page_count = len(pages)
     if page_count == 0:
         log_error(app_state, "No tracks found in CSV, nothing to generate.")
@@ -193,16 +201,21 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
             page_number=i,
             total_pages=page_count
         )
+
+        # Mirror columns for the back (flip on long edge)
+        back_tracks = mirror_columns_per_row(page_tracks, columns=3)
+
         # Render back HTML for this chunk
         back_html = back_template.render(
-            tracks=page_tracks,
+            tracks=back_tracks,
             css_embedded=embedded_css,
             page_number=i,
             total_pages=page_count
         )
         # Save each to a separate file
-        front_file_name = f"cards_front_page{i}.html"
-        back_file_name = f"cards_back_page{i}.html"
+        page_str = str(i).zfill(2)  # ensures 01, 02, 03...
+        front_file_name = f"page{page_str}_front.html"
+        back_file_name = f"page{page_str}_back.html"
         front_path = os.path.join(output_dir, front_file_name)
         back_path = os.path.join(output_dir, back_file_name)
         with open(front_path, "w", encoding="utf-8") as f:

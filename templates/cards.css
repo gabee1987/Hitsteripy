@@ -12,18 +12,14 @@ body {
 .page {
   display: grid;
   grid-template-columns: repeat(3, 60mm); /* 3 columns of 60mm */
-  grid-template-rows: repeat(4, 60mm); /* 4 rows of 60mm */
-  gap: 0; /* No gaps for perfect alignment */
-
-  width: 180mm; /* 3 cards * 60mm */
-  height: 240mm; /* 4 cards * 60mm */
-
-  margin: 0 auto; /* Center the grid on the page */
+  grid-template-rows: repeat(4, 60mm);     /* 4 rows of 60mm */
+  gap: 4mm; /* Small gap for easier cutting */
+  width: calc(180mm + (4mm * 2)); /* 3 cards + gaps */
+  height: calc(240mm + (4mm * 3)); /* 4 cards + gaps */
+  margin: 0 auto;
   justify-content: center;
   align-content: center;
   page-break-inside: avoid;
-
-  /* border: 0.5pt dashed red; */
 }
 
 .card {
@@ -59,7 +55,9 @@ body {
   margin-bottom: 2.5mm;
 }
 
-.front .serial-number {
+/* Serial number for both sides in bottom-left visually */
+.front .serial-number,
+.back .serial-number {
   position: absolute;
   bottom: 1mm;
   left: 1mm;
@@ -73,10 +71,9 @@ body {
 }
 
 .back .qr-code {
-  width: 25mm;
-  height: 25mm;
-  /* border-radius: 50%; */
-  object-fit: cover; /* Ensures the image covers the element without distortion */
+  width: 35mm; /* bigger QR */
+  height: 35mm;
+  object-fit: cover;
   display: block;
   margin: auto;
 }

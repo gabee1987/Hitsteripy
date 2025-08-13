@@ -12,13 +12,7 @@ env\Scripts\activate
 deactivate
 
 # Delete existing virtual environment
-rm -r env  
-
-# Create a new virtual environment
-python -m venv env  
-
-# Activate the virtual environment
-env\Scripts\activate  
+rm -r env
 
 # Reinstall all dependencies
 pip install --no-cache-dir -r requirements.txt  
@@ -56,6 +50,10 @@ flake8 src
 
 # Run tests if you have a tests/ folder and use pytest
 pytest tests
+
+# Set up and run on a virtual environment
+python -m venv env; .\env\Scripts\Activate.ps1; pip install --no-cache-dir -r requirements.txt; python -m src.main
+
 
 # -------------------------------
 #  REFERENCE COMMANDS
