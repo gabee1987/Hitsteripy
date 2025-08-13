@@ -65,8 +65,9 @@ body {
   color: #333;
 }
 
+/* This placeholder is replaced by embed_css_with_background() */
 .back {
-  background: url("../assets/card_bg_06.png") no-repeat center center;
+  background: url("../assets/card_bg_09.png") no-repeat center center;
   background-size: cover;
 }
 

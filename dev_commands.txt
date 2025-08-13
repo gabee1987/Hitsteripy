@@ -41,6 +41,10 @@ python -m src.main
 # (Optional) If your module were named differently
 # python -m src.some_other_main
 
+# Run in the current virtual environment
+.\env\Scripts\Activate.ps1; python -m src.main
+
+
 # ---------------------------------
 #  LINT / TEST COMMANDS (EXAMPLES)
 # ---------------------------------

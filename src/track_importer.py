@@ -38,7 +38,7 @@ def import_tracks(app_state, sp, playlist_url, track_count):
             writer.writerow(["Serial Number", "Artist", "Song Name", "Year", "Spotify URL"])
             for i, track in enumerate(track_data):
                 writer.writerow([
-                    f"SN-{i + 1:03}",
+                    f"Card-{i + 1:03}",
                     track["artist"],
                     track["song_name"],
                     track["year"],

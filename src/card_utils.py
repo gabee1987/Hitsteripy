@@ -9,6 +9,7 @@ from .logger import log_info, log_error, log_success
 from PIL import Image
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import SquareModuleDrawer  # Use square style
+from .constants import BACKGROUND_IMAGE_PATH, BACKGROUND_IMAGE_PLACEHOLDER
 
 def generate_random_gradient():
     """
@@ -55,7 +56,7 @@ def embed_css_with_background(css_path, background_image_path):
         with open(css_path, "r", encoding="utf-8") as f:
             css_content = f.read()
         # Replace the placeholder for the background image.
-        css_content = css_content.replace("../assets/card_bg_06.png", background_base64)
+        css_content = css_content.replace(BACKGROUND_IMAGE_PLACEHOLDER, background_base64)
         return f"<style>\n{css_content}\n</style>"
     except Exception as e:
         raise FileNotFoundError(f"Could not embed CSS or image. Error: {e}")
@@ -139,10 +140,9 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
     front_template_path = os.path.join("templates", "cards_front_template.html")
     back_template_path = os.path.join("templates", "cards_back_template.html")
     css_path = os.path.join("templates", "cards.css")
-    background_image_path = os.path.join("assets", "card_bg_06.png")
     
      # 1) Embed the CSS with background image as before
-    embedded_css = embed_css_with_background(css_path, background_image_path)
+    embedded_css = embed_css_with_background(css_path, BACKGROUND_IMAGE_PATH)
     
      # 2) Read the tracks CSV and build up a track list
     all_tracks = []
