@@ -17,6 +17,7 @@
       <div class="card back">
         <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->
         <img class="qr-code" src="{{ track.qr_data_uri }}" alt="QR Code" />
+        <div class="serial-number">{{ track.serial_number }}</div>
       </div>
       {% endfor %}
     </div>
