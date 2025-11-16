@@ -385,6 +385,29 @@ def generate_cards_endpoint():
         log_error(app_state, f"Failed to generate cards: {error_msg}")
         return jsonify({"success": False, "error": error_msg}), 500
 
+@app.route('/api/cards/track-count', methods=['POST'])
+def get_track_count():
+    """Get the number of tracks in a CSV file."""
+    data = request.json
+    csv_path = data.get('csv_path')
+    
+    if not csv_path or not os.path.exists(csv_path):
+        return jsonify({"success": False, "error": "CSV file not found"}), 400
+    
+    try:
+        import csv
+        with open(csv_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            tracks = list(reader)
+        
+        return jsonify({
+            "success": True,
+            "total_tracks": len(tracks)
+        })
+    except Exception as e:
+        error_msg = str(e)
+        return jsonify({"success": False, "error": error_msg}), 500
+
 @app.route('/api/cards/preview', methods=['POST'])
 def preview_card():
     """Generate a preview of a single card."""
@@ -459,7 +482,8 @@ def preview_card():
         
         return jsonify({
             "success": True,
-            "html": html
+            "html": html,
+            "total_tracks": len(tracks)
         })
     except Exception as e:
         error_msg = str(e)

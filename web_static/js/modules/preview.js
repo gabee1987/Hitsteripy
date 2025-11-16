@@ -31,12 +31,48 @@ export const PreviewModule = {
   /**
    * Change preview track
    */
-  changeTrack(delta) {
-    const newIndex = appState.preview.trackIndex + delta;
+  async changeTrack(delta) {
+    const csvPath = DOMUtils.get(SELECTORS.previewCsvSelect).value;
+    if (!csvPath) {
+      ToastModule.error("Please select a CSV file first");
+      return;
+    }
+
+    // Read current track index from input field
+    const currentIndexInput = DOMUtils.get(SELECTORS.previewTrackIndex);
+    const currentIndex = parseInt(currentIndexInput.value) - 1;
+    const newIndex = currentIndex + delta;
+
+    // Ensure maxTracks is available
+    if (!appState.preview.maxTracks || appState.preview.maxTracks === 0) {
+      try {
+        const countResult = await API.post("cards/track-count", {
+          csv_path: csvPath,
+        });
+        if (countResult.success) {
+          appState.preview.maxTracks = countResult.total_tracks;
+        } else {
+          ToastModule.error("Failed to load track count");
+          return;
+        }
+      } catch (error) {
+        ToastModule.error("Failed to load track count");
+        return;
+      }
+    }
+
+    // Validate new index
     if (newIndex >= 0 && newIndex < appState.preview.maxTracks) {
       appState.preview.trackIndex = newIndex;
-      DOMUtils.get(SELECTORS.previewTrackIndex).value = newIndex + 1;
+      currentIndexInput.value = newIndex + 1;
       this.load();
+    } else {
+      // Show feedback if at boundary
+      if (newIndex < 0) {
+        ToastModule.error("Already at first track");
+      } else {
+        ToastModule.error(`Maximum track number is ${appState.preview.maxTracks}`);
+      }
     }
   },
 
@@ -51,6 +87,11 @@ export const PreviewModule = {
     if (!csvPath) {
       ToastModule.error("Please select a CSV file to preview");
       return;
+    }
+
+    // Reset maxTracks if CSV file changed
+    if (appState.preview.csvPath !== csvPath) {
+      appState.preview.maxTracks = 0;
     }
 
     appState.preview.csvPath = csvPath;
@@ -77,13 +118,22 @@ export const PreviewModule = {
         iframeDoc.write(result.html);
         iframeDoc.close();
 
-        // Get max tracks for navigation
-        fetch(csvPath)
-          .then((r) => r.text())
-          .then((text) => {
-            const lines = text.split("\n").filter((l) => l.trim());
-            appState.preview.maxTracks = Math.max(0, lines.length - 1);
-          });
+        // Store max tracks from response or fetch if not available
+        if (result.total_tracks !== undefined) {
+          appState.preview.maxTracks = result.total_tracks;
+        } else {
+          // Fallback: fetch track count via API
+          try {
+            const countResult = await API.post("cards/track-count", {
+              csv_path: csvPath,
+            });
+            if (countResult.success) {
+              appState.preview.maxTracks = countResult.total_tracks;
+            }
+          } catch (error) {
+            console.error("Failed to get track count:", error);
+          }
+        }
       }
     } catch (error) {
       DOMUtils.render(DOMUtils.get(SELECTORS.previewContainer), [
