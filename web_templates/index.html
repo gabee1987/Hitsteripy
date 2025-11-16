@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hitsteripy - Spotify Track Card Generator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <h1>🌟 Hitsteripy</h1>
+        <p class="subtitle">Spotify Track Card Generator</p>
+      </header>
+
+      <div class="status-bar" id="statusBar">
+        <div class="status-item">
+          <span class="status-label">Playlist:</span>
+          <span class="status-value" id="statusPlaylist">None selected</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Track Count:</span>
+          <span class="status-value" id="statusTrackCount">N/A</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Spotify:</span>
+          <span class="status-value" id="statusSpotify">Connecting...</span>
+        </div>
+      </div>
+
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="playlist">🎵 Playlist</button>
+        <button class="tab-btn" data-tab="import">📂 Import</button>
+        <button class="tab-btn" data-tab="generate">📇 Generate</button>
+        <button class="tab-btn" data-tab="preview">👁️ Preview</button>
+        <button class="tab-btn" data-tab="logs">🪵 Logs</button>
+      </nav>
+
+      <main class="content">
+        <!-- Playlist Tab -->
+        <div class="tab-content active" id="tab-playlist">
+          <div class="card">
+            <h2>Set Spotify Playlist</h2>
+            <div class="form-group">
+              <label for="playlistUrl">Playlist URL:</label>
+              <input
+                type="text"
+                id="playlistUrl"
+                placeholder="https://open.spotify.com/playlist/..."
+                class="input-field"
+              />
+              <button class="btn btn-primary" id="setPlaylistBtn">
+                Set Playlist
+              </button>
+            </div>
+
+            <div class="history-section">
+              <h3>Recent Playlists</h3>
+              <div id="playlistHistory" class="history-list"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Set Track Count</h2>
+            <div class="form-group">
+              <label for="trackCount">Number of Tracks:</label>
+              <input
+                type="text"
+                id="trackCount"
+                placeholder="Enter number or 'all'"
+                class="input-field"
+              />
+              <button class="btn btn-primary" id="setTrackCountBtn">
+                Set Count
+              </button>
+            </div>
+
+            <div class="quick-options">
+              <button class="btn btn-secondary" data-count="10">10</button>
+              <button class="btn btn-secondary" data-count="50">50</button>
+              <button class="btn btn-secondary" data-count="100">100</button>
+              <button class="btn btn-secondary" data-count="200">200</button>
+              <button class="btn btn-secondary" data-count="all">All</button>
+            </div>
+
+            <div class="history-section">
+              <h3>Recent Counts</h3>
+              <div id="trackCountHistory" class="history-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Import Tab -->
+        <div class="tab-content" id="tab-import">
+          <div class="card">
+            <h2>Import Tracks</h2>
+            <p class="info-text">
+              Import tracks from your selected playlist to a CSV file.
+            </p>
+
+            <div class="form-group">
+              <button class="btn btn-primary btn-large" id="importTracksBtn">
+                📥 Import Tracks
+              </button>
+            </div>
+
+            <div id="importStatus" class="status-message"></div>
+          </div>
+        </div>
+
+        <!-- Generate Tab -->
+        <div class="tab-content" id="tab-generate">
+          <div class="card">
+            <h2>Generate Cards</h2>
+            <p class="info-text">
+              Generate printable HTML cards from imported tracks.
+            </p>
+
+            <div class="form-group">
+              <label for="csvFileSelect">Select CSV File:</label>
+              <select id="csvFileSelect" class="select-field">
+                <option value="">Loading...</option>
+              </select>
+              <button class="btn btn-primary btn-large" id="generateCardsBtn">
+                🎨 Generate Cards
+              </button>
+            </div>
+
+            <div id="generateStatus" class="status-message"></div>
+          </div>
+        </div>
+
+        <!-- Preview Tab -->
+        <div class="tab-content" id="tab-preview">
+          <div class="card">
+            <h2>Card Preview</h2>
+            <p class="info-text">Preview cards before or after generation.</p>
+
+            <div class="preview-controls">
+              <div class="form-group">
+                <label for="previewCsvSelect">Select CSV File:</label>
+                <select id="previewCsvSelect" class="select-field">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="previewTrackIndex">Track Number:</label>
+                <input
+                  type="number"
+                  id="previewTrackIndex"
+                  value="1"
+                  min="1"
+                  class="input-field"
+                  style="width: 100px"
+                />
+                <button class="btn btn-secondary" id="prevTrackBtn">
+                  ← Prev
+                </button>
+                <button class="btn btn-secondary" id="nextTrackBtn">
+                  Next →
+                </button>
+              </div>
+
+              <div class="form-group">
+                <label>Card Side:</label>
+                <button
+                  class="btn btn-secondary"
+                  data-side="front"
+                  id="previewFrontBtn"
+                >
+                  Front
+                </button>
+                <button
+                  class="btn btn-secondary active"
+                  data-side="back"
+                  id="previewBackBtn"
+                >
+                  Back
+                </button>
+              </div>
+
+              <div class="form-group">
+                <button class="btn btn-primary" id="loadPreviewBtn">
+                  Load Preview
+                </button>
+              </div>
+            </div>
+
+            <div id="previewContainer" class="preview-container">
+              <p class="info-text">
+                Select a CSV file and click "Load Preview" to see the card.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs Tab -->
+        <div class="tab-content" id="tab-logs">
+          <div class="card">
+            <h2>Application Logs</h2>
+            <div id="logsContainer" class="logs-container"></div>
+            <button class="btn btn-secondary" id="refreshLogsBtn">
+              Refresh Logs
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
