@@ -6,3 +6,4 @@ spotipy==2.23.0
 python-dotenv==1.0.0
 rich==13.3.2
 prompt-toolkit==3.0.36
+pyinstaller>=6.0.0

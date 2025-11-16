@@ -9,7 +9,8 @@ from .logger import log_info, log_error, log_success
 from PIL import Image
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import SquareModuleDrawer  # Use square style
-from .constants import BACKGROUND_IMAGE_PATH, BACKGROUND_IMAGE_PLACEHOLDER
+from .constants import BACKGROUND_IMAGE_FILENAME, BACKGROUND_IMAGE_PLACEHOLDER
+from .path_utils import get_template_path, get_asset_path
 
 def generate_random_gradient():
     """
@@ -42,12 +43,19 @@ def generate_random_gradient():
 
 def embed_image_as_base64(image_path):
     """Convert an image to a Base64 string for embedding in CSS."""
+    import os
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(
+            f"Image file not found: {image_path}\n"
+            f"Current working directory: {os.getcwd()}\n"
+            f"Absolute path: {os.path.abspath(image_path) if image_path else 'N/A'}"
+        )
     try:
         with open(image_path, "rb") as img_file:
             encoded_string = base64.b64encode(img_file.read()).decode("utf-8")
         return f"data:image/png;base64,{encoded_string}"
     except Exception as e:
-        raise FileNotFoundError(f"Could not embed image. Error: {e}")
+        raise FileNotFoundError(f"Could not embed image at {image_path}. Error: {e}")
 
 def embed_css_with_background(css_path, background_image_path):
     """Embed the CSS file with an inline Base64 background image."""
@@ -137,12 +145,24 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
     Read tracks from CSV, chunk them into pages of 12 (3x4), and create multiple
     front/back HTML files.
     """
-    front_template_path = os.path.join("templates", "cards_front_template.html")
-    back_template_path = os.path.join("templates", "cards_back_template.html")
-    css_path = os.path.join("templates", "cards.css")
+    # Use path_utils to get correct paths for both dev and PyInstaller
+    front_template_path = get_template_path("cards_front_template.html")
+    back_template_path = get_template_path("cards_back_template.html")
+    css_path = get_template_path("cards.css")
+    background_image_path = get_asset_path(BACKGROUND_IMAGE_FILENAME)
+    
+    # Log paths for debugging (very helpful for troubleshooting)
+    log_info(app_state, f"Using templates from: {os.path.dirname(front_template_path)}")
+    log_info(app_state, f"Using background image: {background_image_path}")
+    log_info(app_state, f"Image exists: {os.path.exists(background_image_path)}")
+    log_info(app_state, f"CSS exists: {os.path.exists(css_path)}")
     
      # 1) Embed the CSS with background image as before
-    embedded_css = embed_css_with_background(css_path, BACKGROUND_IMAGE_PATH)
+    try:
+        embedded_css = embed_css_with_background(css_path, background_image_path)
+    except FileNotFoundError as e:
+        log_error(app_state, f"File not found error: {e}")
+        raise
     
      # 2) Read the tracks CSV and build up a track list
     all_tracks = []
