@@ -3,6 +3,75 @@
   margin: 5mm;
 }
 
+/* Print-specific styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 5mm;
+  }
+  
+  * {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  .page {
+    page-break-after: always;
+    page-break-inside: avoid;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  .page:last-child {
+    page-break-after: auto;
+  }
+  
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  .front,
+  .back {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Ensure gradients and backgrounds print */
+  .front {
+    background: hsl(210, 50%, 90%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  .back {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  img {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;

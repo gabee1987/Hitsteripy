@@ -37,6 +37,7 @@ export const SELECTORS = {
   csvFileSelect: "csvFileSelect",
   generateCardsBtn: "generateCardsBtn",
   generateStatus: "generateStatus",
+  generatedCardsList: "generatedCardsList",
 
   // Preview
   previewCsvSelect: "previewCsvSelect",

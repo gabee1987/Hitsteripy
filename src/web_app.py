@@ -444,13 +444,64 @@ def get_logs():
 def serve_generated_card(filename):
     """Serve generated card HTML files."""
     ensure_spotify_init()
-    # Handle nested paths (subdirectories)
-    path_parts = filename.split('/')
-    if len(path_parts) > 1:
-        subdir = '/'.join(path_parts[:-1])
-        filename_only = path_parts[-1]
-        return send_from_directory(os.path.join('generated_cards', subdir), filename_only)
-    return send_from_directory('generated_cards', filename)
+    try:
+        from urllib.parse import unquote
+        # Decode URL-encoded filename (handles spaces, etc.)
+        decoded_filename = unquote(filename)
+        
+        # Handle nested paths (subdirectories)
+        path_parts = decoded_filename.split('/')
+        if len(path_parts) > 1:
+            subdir = '/'.join(path_parts[:-1])
+            filename_only = path_parts[-1]
+            full_dir_path = os.path.join(parent_dir, 'generated_cards', subdir)
+        else:
+            full_dir_path = os.path.join(parent_dir, 'generated_cards')
+            filename_only = decoded_filename
+        
+        # Verify the file exists
+        full_file_path = os.path.join(full_dir_path, filename_only)
+        if not os.path.exists(full_file_path):
+            return f"File not found: {full_file_path}", 404
+        
+        return send_from_directory(full_dir_path, filename_only)
+    except Exception as e:
+        log_error(app_state, f"Error serving card file: {e}")
+        return f"Error: {str(e)}", 500
+
+@app.route('/api/cards/generated')
+def get_generated_cards():
+    """Get list of generated card sets."""
+    ensure_spotify_init()
+    try:
+        generated_cards_dir = "generated_cards"
+        if not os.path.exists(generated_cards_dir):
+            return jsonify([])
+        
+        card_sets = []
+        for item in sorted(os.listdir(generated_cards_dir), reverse=True):
+            item_path = os.path.join(generated_cards_dir, item)
+            if os.path.isdir(item_path):
+                files = []
+                for file in sorted(os.listdir(item_path)):
+                    if file.endswith('.html'):
+                        files.append({
+                            "name": file,
+                            "url": f"/generated_cards/{item}/{file}",
+                            "type": "front" if "front" in file else "back"
+                        })
+                
+                if files:
+                    card_sets.append({
+                        "name": item,
+                        "path": item,
+                        "files": files,
+                        "count": len(files)
+                    })
+        
+        return jsonify(card_sets)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def run_web_app(host='127.0.0.1', port=5000, open_browser=True):
     """Run the Flask web application."""

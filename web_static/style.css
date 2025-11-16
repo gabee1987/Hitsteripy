@@ -530,6 +530,72 @@ body {
   color: #f87171;
 }
 
+/* Generated Cards List */
+.generated-cards-list {
+  margin-top: 20px;
+}
+
+.card-set {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: var(--card-bg);
+}
+
+.card-set-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-set-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.card-set-count {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.card-set-files {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-set-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.page-label {
+  font-weight: 600;
+  color: var(--text);
+  min-width: 80px;
+}
+
+.page-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
 /* Loading spinner */
 .spinner {
   border: 3px solid var(--border);

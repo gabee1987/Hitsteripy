@@ -5,6 +5,7 @@
 import { DOMUtils } from "./dom-utils.js";
 import { CsvModule } from "./modules/csv.js";
 import { LogsModule } from "./modules/logs.js";
+import { GenerateModule } from "./modules/generate.js";
 
 export const TabManager = {
   /**
@@ -32,6 +33,9 @@ export const TabManager = {
         // Load data for specific tabs
         if (tabId === "generate" || tabId === "preview") {
           CsvModule.load();
+          if (tabId === "generate") {
+            GenerateModule.loadGeneratedCards();
+          }
         }
         if (tabId === "logs") {
           LogsModule.load();
