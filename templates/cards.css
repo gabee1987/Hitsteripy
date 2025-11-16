@@ -12,7 +12,7 @@ body {
 .page {
   display: grid;
   grid-template-columns: repeat(3, 60mm); /* 3 columns of 60mm */
-  grid-template-rows: repeat(4, 60mm);     /* 4 rows of 60mm */
+  grid-template-rows: repeat(4, 60mm); /* 4 rows of 60mm */
   gap: 4mm; /* Small gap for easier cutting */
   width: calc(180mm + (4mm * 2)); /* 3 cards + gaps */
   height: calc(240mm + (4mm * 3)); /* 4 cards + gaps */
@@ -41,7 +41,7 @@ body {
 .front .artist {
   font-size: 1.2em;
   font-weight: bold;
-  margin-top: 2mm;
+  margin-top: 8mm; /* Same space from top edge as song has from bottom edge */
 }
 
 .front .year {
@@ -52,17 +52,37 @@ body {
 
 .front .song-name {
   font-size: 1em;
-  margin-bottom: 2.5mm;
+  margin-bottom: 8mm; /* Increased space between song name and bottom edge */
 }
 
-/* Serial number for both sides in bottom-left visually */
-.front .serial-number,
-.back .serial-number {
+/* Footer row container - positions TuneTrack and serial number on the same row */
+.front .card-footer,
+.back .card-footer {
   position: absolute;
   bottom: 1mm;
   left: 1mm;
+  right: 1mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1;
+}
+
+/* Card label (TuneTrack) on the left side of footer */
+.front .card-label,
+.back .card-label {
   font-size: 0.5em;
   color: #333;
+  line-height: 1;
+}
+
+/* Serial number on the right side of footer */
+.front .serial-number,
+.back .serial-number {
+  font-size: 0.5em;
+  color: #333;
+  line-height: 1;
+  text-align: right;
 }
 
 /* This placeholder is replaced by embed_css_with_background() */

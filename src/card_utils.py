@@ -168,7 +168,7 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
     all_tracks = []
     with open(tracks_csv, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        for row in reader:
+        for idx, row in enumerate(reader, start=1):
             qr_data_uri = generate_custom_qr_data_uri(
                 row["Spotify URL"],
                 box_size=4,
@@ -176,9 +176,13 @@ def generate_html_cards(app_state, tracks_csv, output_dir):
                 fill_color="black",
                 back_color=(255, 255, 255)  # White background
             )
+            # Format serial number with leading zeros (e.g., #001, #002, #123)
+            card_num_str = f"#{idx:03d}"
             row["qr_data_uri"] = qr_data_uri
             row["gradient"] = generate_random_gradient()
-            row["serial_number"] = row["Serial Number"]
+            row["serial_number"] = row["Serial Number"]  # Keep original for reference
+            row["front_serial"] = f"Front-{card_num_str}"
+            row["back_serial"] = f"Back-{card_num_str}"
             row["artist"] = row["Artist"]
             row["song_name"] = row["Song Name"]
             row["year"] = row["Year"]
