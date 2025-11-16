@@ -32,59 +32,65 @@
   <body>
     <!-- Version check: v2 - Theme toggle and playlist tabs should be visible -->
     <!-- Cache bust timestamp: {{ cache_bust }} -->
-    <div class="app-container">
-      <header class="app-header">
-        <h1>🌟 Hitsteripy</h1>
-        <p class="subtitle">Spotify Track Card Generator</p>
-        <!-- DEBUG: Visible version indicator -->
-        <div
-          id="htmlVersionCheck"
-          style="
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            background: red;
-            color: white;
-            padding: 5px;
-            z-index: 10000;
-          "
-        >
-          OLD CACHED VERSION DETECTED!
-        </div>
-      </header>
+    <!-- DEBUG: Visible version indicator -->
+    <div
+      id="htmlVersionCheck"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: red;
+        color: white;
+        padding: 5px;
+        z-index: 10000;
+      "
+    >
+      OLD CACHED VERSION DETECTED!
+    </div>
 
-      <div class="status-bar" id="statusBar">
-        <div class="status-item">
-          <span class="status-label">Playlist:</span>
-          <span class="status-value" id="statusPlaylist">None selected</span>
-        </div>
-        <div class="status-item">
-          <span class="status-label">Track Count:</span>
-          <span class="status-value" id="statusTrackCount">N/A</span>
-        </div>
-        <div class="status-item">
-          <span class="status-label">Spotify:</span>
-          <span class="status-value" id="statusSpotify">Connecting...</span>
-        </div>
-        <div
-          class="status-item status-item-right"
-          style="
-            display: flex !important;
-            visibility: visible !important;
-            align-items: center;
-            gap: 8px;
-          "
-        >
-          <span style="font-size: 0.9rem; color: var(--text-light)">Light</span>
-          <label class="theme-toggle-switch" title="Toggle dark/light mode">
-            <input type="checkbox" id="themeToggle" />
-            <span class="theme-toggle-slider"></span>
-          </label>
-          <span style="font-size: 0.9rem; color: var(--text-light)">Dark</span>
+    <div class="app-header-unified sticky-header" id="appHeader">
+      <div class="header-content">
+        <div class="nav-logo">🌟 Hitsteripy</div>
+        <nav class="nav-tabs">
+          <button class="tab-btn active" data-tab="playlist">
+            🎵 Playlist
+          </button>
+          <button class="tab-btn" data-tab="import">📂 Import</button>
+          <button class="tab-btn" data-tab="generate">📇 Generate</button>
+          <button class="tab-btn" data-tab="preview">👁️ Preview</button>
+          <button class="tab-btn" data-tab="logs">🪵 Logs</button>
+        </nav>
+        <div class="header-status" id="statusBar">
+          <div class="status-item">
+            <span class="status-label">Playlist:</span>
+            <span class="status-value" id="statusPlaylist">None selected</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Track Count:</span>
+            <span class="status-value" id="statusTrackCount">N/A</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Spotify:</span>
+            <span class="status-value" id="statusSpotify">Connecting...</span>
+          </div>
+          <div class="status-item status-item-right">
+            <span style="font-size: 0.85rem; color: var(--text-light)"
+              >Light</span
+            >
+            <label class="theme-toggle-switch" title="Toggle dark/light mode">
+              <input type="checkbox" id="themeToggle" />
+              <span class="theme-toggle-slider"></span>
+            </label>
+            <span style="font-size: 0.85rem; color: var(--text-light)"
+              >Dark</span
+            >
+          </div>
         </div>
       </div>
+    </div>
 
+    <div class="app-container">
       <!-- Progress Bar -->
       <div
         class="progress-bar-container"
@@ -106,14 +112,6 @@
 
       <!-- Toast Messages Container -->
       <div class="toast-container" id="toastContainer"></div>
-
-      <nav class="tabs">
-        <button class="tab-btn active" data-tab="playlist">🎵 Playlist</button>
-        <button class="tab-btn" data-tab="import">📂 Import</button>
-        <button class="tab-btn" data-tab="generate">📇 Generate</button>
-        <button class="tab-btn" data-tab="preview">👁️ Preview</button>
-        <button class="tab-btn" data-tab="logs">🪵 Logs</button>
-      </nav>
 
       <main class="content">
         <!-- Playlist Tab -->
@@ -157,47 +155,54 @@
 
         <!-- Import Tab -->
         <div class="tab-content" id="tab-import">
-          <div class="card">
-            <h2>Import Tracks</h2>
-            <p class="info-text">
-              Import tracks from your selected playlist to a CSV file.
-            </p>
+          <div class="import-layout">
+            <div class="card import-left">
+              <div class="card-header-compact">
+                <h2>Import Tracks</h2>
+                <span class="info-text-inline"
+                  >Import tracks from your selected playlist to a CSV
+                  file.</span
+                >
+              </div>
 
-            <div class="form-group">
-              <button class="btn btn-primary btn-large" id="importTracksBtn">
-                📥 Import Tracks
-              </button>
+              <div class="form-group">
+                <button class="btn btn-primary btn-large" id="importTracksBtn">
+                  📥 Import Tracks
+                </button>
+              </div>
+
+              <div id="importStatus" class="status-message"></div>
             </div>
 
-            <div id="importStatus" class="status-message"></div>
-          </div>
+            <div class="card import-right">
+              <div class="card-header-compact">
+                <h2>Set Track Count</h2>
+              </div>
+              <div class="form-group">
+                <label for="trackCount">Number of Tracks:</label>
+                <input
+                  type="text"
+                  id="trackCount"
+                  placeholder="Enter number or 'all'"
+                  class="input-field"
+                />
+                <button class="btn btn-primary" id="setTrackCountBtn">
+                  Set Count
+                </button>
+              </div>
 
-          <div class="card">
-            <h2>Set Track Count</h2>
-            <div class="form-group">
-              <label for="trackCount">Number of Tracks:</label>
-              <input
-                type="text"
-                id="trackCount"
-                placeholder="Enter number or 'all'"
-                class="input-field"
-              />
-              <button class="btn btn-primary" id="setTrackCountBtn">
-                Set Count
-              </button>
-            </div>
+              <div class="quick-options">
+                <button class="btn btn-secondary" data-count="10">10</button>
+                <button class="btn btn-secondary" data-count="50">50</button>
+                <button class="btn btn-secondary" data-count="100">100</button>
+                <button class="btn btn-secondary" data-count="200">200</button>
+                <button class="btn btn-secondary" data-count="all">All</button>
+              </div>
 
-            <div class="quick-options">
-              <button class="btn btn-secondary" data-count="10">10</button>
-              <button class="btn btn-secondary" data-count="50">50</button>
-              <button class="btn btn-secondary" data-count="100">100</button>
-              <button class="btn btn-secondary" data-count="200">200</button>
-              <button class="btn btn-secondary" data-count="all">All</button>
-            </div>
-
-            <div class="history-section">
-              <h3>Recent Counts</h3>
-              <div id="trackCountHistory" class="history-list"></div>
+              <div class="history-section">
+                <h3>Recent Counts</h3>
+                <div id="trackCountHistory" class="history-list"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -205,10 +210,12 @@
         <!-- Generate Tab -->
         <div class="tab-content" id="tab-generate">
           <div class="card">
-            <h2>Generate Cards</h2>
-            <p class="info-text">
-              Generate printable HTML cards from imported tracks.
-            </p>
+            <div class="card-header-compact">
+              <h2>Generate Cards</h2>
+              <span class="info-text-inline"
+                >Generate printable HTML cards from imported tracks.</span
+              >
+            </div>
 
             <div class="form-group">
               <label for="csvFileSelect">Select CSV File:</label>
@@ -224,12 +231,14 @@
           </div>
 
           <div class="card">
-            <h2>Generated Cards</h2>
-            <p class="info-text">
-              Generate PDFs for all pages or click "Print" buttons to open cards
-              in a new window. PDFs are saved with matching filenames
-              (page01_front.html → page01_front.pdf) for easy printing.
-            </p>
+            <div class="card-header-compact">
+              <h2>Generated Cards</h2>
+              <span class="info-text-inline"
+                >Generate PDFs for all pages or click "Print" buttons to open
+                cards in a new window. PDFs are saved with matching filenames
+                (page01_front.html → page01_front.pdf) for easy printing.</span
+              >
+            </div>
             <div id="generatedCardsList" class="generated-cards-list"></div>
           </div>
         </div>
@@ -237,123 +246,133 @@
         <!-- Preview Tab -->
         <div class="tab-content" id="tab-preview">
           <div class="card">
-            <h2>Card Preview</h2>
-            <p class="info-text">Preview cards before or after generation.</p>
+            <div class="card-header-compact">
+              <h2>Card Preview</h2>
+              <span class="info-text-inline"
+                >Preview cards before or after generation.</span
+              >
+            </div>
 
             <div class="preview-controls">
-              <div class="form-group">
-                <label for="previewCsvSelect">Select CSV File:</label>
-                <select id="previewCsvSelect" class="select-field">
-                  <option value="">Loading...</option>
-                </select>
-              </div>
+              <div class="controls-grid">
+                <div class="control-group">
+                  <label for="previewCsvSelect">CSV File</label>
+                  <select id="previewCsvSelect" class="select-field">
+                    <option value="">Loading...</option>
+                  </select>
+                </div>
 
-              <div class="form-group form-group-row">
-                <div class="form-group-inline">
-                  <label for="previewTrackIndex">Track Number:</label>
-                  <input
-                    type="number"
-                    id="previewTrackIndex"
-                    value="1"
-                    min="1"
-                    class="input-field"
-                    style="width: 100px"
-                  />
-                  <button class="btn btn-secondary" id="prevTrackBtn">
-                    ← Prev
-                  </button>
-                  <button class="btn btn-secondary" id="nextTrackBtn">
-                    Next →
-                  </button>
+                <div class="control-group">
+                  <label for="previewTrackIndex">Track Number</label>
+                  <div class="control-inline">
+                    <button class="btn btn-secondary" id="prevTrackBtn">
+                      ◀
+                    </button>
+                    <input
+                      type="number"
+                      id="previewTrackIndex"
+                      value="1"
+                      min="1"
+                      class="input-field"
+                    />
+                    <button class="btn btn-secondary" id="nextTrackBtn">
+                      ▶
+                    </button>
+                  </div>
                 </div>
-                <div class="form-group-inline">
-                  <label>Card Side:</label>
-                  <button
-                    class="btn btn-secondary"
-                    data-side="front"
-                    id="previewFrontBtn"
-                  >
-                    Front
-                  </button>
-                  <button
-                    class="btn btn-secondary active"
-                    data-side="back"
-                    id="previewBackBtn"
-                  >
-                    Back
-                  </button>
-                </div>
-              </div>
 
-              <div class="form-group">
-                <button class="btn btn-primary" id="loadPreviewBtn">
-                  Load Preview
-                </button>
-              </div>
-            </div>
+                <div class="control-group">
+                  <label>Card Side</label>
+                  <div class="control-inline">
+                    <button
+                      class="btn btn-secondary"
+                      data-side="front"
+                      id="previewFrontBtn"
+                    >
+                      Front
+                    </button>
+                    <button
+                      class="btn btn-secondary active"
+                      data-side="back"
+                      id="previewBackBtn"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
 
-            <!-- Card Editor Section -->
-            <div class="card-editor" id="cardEditor" style="display: none">
-              <h3>Edit Card Data</h3>
-              <div class="editor-fields">
-                <div class="editor-row">
-                  <div class="editor-field">
-                    <label for="editArtist">Artist:</label>
-                    <input
-                      type="text"
-                      id="editArtist"
-                      class="input-field"
-                      placeholder="Artist name"
-                    />
-                  </div>
-                  <div class="editor-field">
-                    <label for="editSongName">Song Name:</label>
-                    <input
-                      type="text"
-                      id="editSongName"
-                      class="input-field"
-                      placeholder="Song name"
-                    />
-                  </div>
-                </div>
-                <div class="editor-row">
-                  <div class="editor-field editor-field-small">
-                    <label for="editYear">Year:</label>
-                    <input
-                      type="text"
-                      id="editYear"
-                      class="input-field"
-                      placeholder="Year"
-                    />
-                  </div>
-                  <div class="editor-field editor-field-large">
-                    <label for="editSpotifyUrl">Spotify URL:</label>
-                    <input
-                      type="text"
-                      id="editSpotifyUrl"
-                      class="input-field"
-                      placeholder="https://open.spotify.com/track/..."
-                    />
-                  </div>
-                </div>
-                <div class="form-group" style="display: flex; gap: 10px">
-                  <button class="btn btn-primary" id="applyEditBtn">
-                    Apply Changes
-                  </button>
-                  <button class="btn btn-secondary" id="saveEditBtn">
-                    Save to CSV
-                  </button>
-                  <button class="btn btn-secondary" id="resetEditBtn">
-                    Reset
+                <div class="control-group control-group-action">
+                  <button class="btn btn-primary" id="loadPreviewBtn">
+                    Load Preview
                   </button>
                 </div>
               </div>
             </div>
 
-            <div id="previewContainer" class="preview-container">
-              <p class="info-text">
-                Select a CSV file and click "Load Preview" to see the card.
-              </p>
+            <div class="preview-edit-layout">
+              <div id="previewContainer" class="preview-container-compact">
+                <p class="info-text">
+                  Select a CSV file and click "Load Preview" to see the card.
+                </p>
+              </div>
+
+              <!-- Card Editor Section -->
+              <div class="card-editor" id="cardEditor" style="display: none">
+                <h3>Edit Card Data</h3>
+                <div class="editor-fields">
+                  <div class="editor-row">
+                    <div class="editor-field">
+                      <label for="editArtist">Artist:</label>
+                      <input
+                        type="text"
+                        id="editArtist"
+                        class="input-field"
+                        placeholder="Artist name"
+                      />
+                    </div>
+                    <div class="editor-field">
+                      <label for="editSongName">Song Name:</label>
+                      <input
+                        type="text"
+                        id="editSongName"
+                        class="input-field"
+                        placeholder="Song name"
+                      />
+                    </div>
+                  </div>
+                  <div class="editor-row">
+                    <div class="editor-field editor-field-small">
+                      <label for="editYear">Year:</label>
+                      <input
+                        type="text"
+                        id="editYear"
+                        class="input-field"
+                        placeholder="Year"
+                      />
+                    </div>
+                    <div class="editor-field editor-field-large">
+                      <label for="editSpotifyUrl">Spotify URL:</label>
+                      <input
+                        type="text"
+                        id="editSpotifyUrl"
+                        class="input-field"
+                        placeholder="https://open.spotify.com/track/..."
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: flex; gap: 10px">
+                    <button class="btn btn-primary" id="applyEditBtn">
+                      Apply Changes
+                    </button>
+                    <button class="btn btn-secondary" id="saveEditBtn">
+                      Save to CSV
+                    </button>
+                    <button class="btn btn-secondary" id="resetEditBtn">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

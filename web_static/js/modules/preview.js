@@ -157,7 +157,7 @@ export const PreviewModule = {
       if (result.success) {
         const container = DOMUtils.get(SELECTORS.previewContainer);
         const iframe = DOMUtils.create("iframe", {
-          style: "width: 100%; min-height: 600px; border: none;",
+          style: "width: 100%; height: 100%; border: none; display: block;",
         });
 
         DOMUtils.render(container, [iframe]);
@@ -167,6 +167,74 @@ export const PreviewModule = {
         iframeDoc.open();
         iframeDoc.write(result.html);
         iframeDoc.close();
+        
+        // Inject CSS to remove all margins and padding and show only first card centered
+        const style = iframeDoc.createElement('style');
+        style.textContent = `
+          * {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .page {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 100% !important;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: 1fr !important;
+            gap: 0 !important;
+          }
+          .card {
+            margin: 0 !important;
+            width: 60mm !important;
+            height: 60mm !important;
+            max-width: 90% !important;
+            max-height: 90% !important;
+          }
+          .card:not(:first-child) {
+            display: none !important;
+          }
+          @page {
+            margin: 0 !important;
+          }
+        `;
+        iframeDoc.head.appendChild(style);
+        
+        // Also set inline styles as backup
+        if (iframeDoc.body) {
+          iframeDoc.body.style.margin = "0";
+          iframeDoc.body.style.padding = "0";
+          iframeDoc.body.style.overflow = "hidden";
+          iframeDoc.body.style.display = "flex";
+          iframeDoc.body.style.alignItems = "center";
+          iframeDoc.body.style.justifyContent = "center";
+        }
+        if (iframeDoc.documentElement) {
+          iframeDoc.documentElement.style.margin = "0";
+          iframeDoc.documentElement.style.padding = "0";
+          iframeDoc.documentElement.style.overflow = "hidden";
+        }
+        const pageDiv = iframeDoc.querySelector('.page');
+        if (pageDiv) {
+          pageDiv.style.margin = "0";
+          pageDiv.style.padding = "0";
+          pageDiv.style.display = "flex";
+          pageDiv.style.alignItems = "center";
+          pageDiv.style.justifyContent = "center";
+        }
 
         // Update editor with returned track data
         if (result.track_data) {
@@ -261,7 +329,7 @@ export const PreviewModule = {
       if (result.success) {
         const container = DOMUtils.get(SELECTORS.previewContainer);
         const iframe = DOMUtils.create("iframe", {
-          style: "width: 100%; min-height: 600px; border: none;",
+          style: "width: 100%; height: 100%; border: none; display: block;",
         });
 
         DOMUtils.render(container, [iframe]);
@@ -271,6 +339,74 @@ export const PreviewModule = {
         iframeDoc.open();
         iframeDoc.write(result.html);
         iframeDoc.close();
+        
+        // Inject CSS to remove all margins and padding and show only first card centered
+        const style = iframeDoc.createElement('style');
+        style.textContent = `
+          * {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .page {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 100% !important;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: 1fr !important;
+            gap: 0 !important;
+          }
+          .card {
+            margin: 0 !important;
+            width: 60mm !important;
+            height: 60mm !important;
+            max-width: 90% !important;
+            max-height: 90% !important;
+          }
+          .card:not(:first-child) {
+            display: none !important;
+          }
+          @page {
+            margin: 0 !important;
+          }
+        `;
+        iframeDoc.head.appendChild(style);
+        
+        // Also set inline styles as backup
+        if (iframeDoc.body) {
+          iframeDoc.body.style.margin = "0";
+          iframeDoc.body.style.padding = "0";
+          iframeDoc.body.style.overflow = "hidden";
+          iframeDoc.body.style.display = "flex";
+          iframeDoc.body.style.alignItems = "center";
+          iframeDoc.body.style.justifyContent = "center";
+        }
+        if (iframeDoc.documentElement) {
+          iframeDoc.documentElement.style.margin = "0";
+          iframeDoc.documentElement.style.padding = "0";
+          iframeDoc.documentElement.style.overflow = "hidden";
+        }
+        const pageDiv = iframeDoc.querySelector('.page');
+        if (pageDiv) {
+          pageDiv.style.margin = "0";
+          pageDiv.style.padding = "0";
+          pageDiv.style.display = "flex";
+          pageDiv.style.alignItems = "center";
+          pageDiv.style.justifyContent = "center";
+        }
 
         // Show editor and load track data
         const editor = DOMUtils.get(SELECTORS.cardEditor);

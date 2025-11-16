@@ -52,6 +52,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Auto-refresh status
   setInterval(() => StatusModule.load(), CONFIG.STATUS_REFRESH_INTERVAL);
+
+  // Fixed header with dynamic padding
+  const header = document.getElementById("appHeader");
+  const appContainer = document.querySelector(".app-container");
+
+  function updateLayout() {
+    if (header && appContainer) {
+      const headerHeight = header.offsetHeight;
+      appContainer.style.paddingTop = `${headerHeight + 20}px`;
+    }
+  }
+
+  function handleScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (header) {
+      if (scrollTop > 20) {
+        header.classList.add("stuck");
+      } else {
+        header.classList.remove("stuck");
+      }
+    }
+  }
+
+  // Update layout on load and resize
+  updateLayout();
+  window.addEventListener("resize", updateLayout);
+  window.addEventListener("scroll", handleScroll);
+  handleScroll(); // Initial check
 });
 
 // ============================================================================
