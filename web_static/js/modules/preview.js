@@ -11,6 +11,11 @@ import { ToastModule } from "./toast.js";
 
 export const PreviewModule = {
   /**
+   * Current track data (for editing)
+   */
+  currentTrackData: null,
+
+  /**
    * Set preview side
    */
   setSide(side) {
@@ -25,6 +30,153 @@ export const PreviewModule = {
     );
     if (appState.preview.csvPath) {
       this.load();
+    }
+  },
+
+  /**
+   * Load track data into editor fields
+   */
+  loadTrackDataIntoEditor(trackData) {
+    if (!trackData) return;
+    
+    this.currentTrackData = { ...trackData };
+    DOMUtils.get(SELECTORS.editArtist).value = trackData.artist || "";
+    DOMUtils.get(SELECTORS.editYear).value = trackData.year || "";
+    DOMUtils.get(SELECTORS.editSongName).value = trackData.song_name || "";
+    DOMUtils.get(SELECTORS.editSpotifyUrl).value = trackData.spotify_url || "";
+  },
+
+  /**
+   * Get edited track data from form
+   */
+  getEditedTrackData() {
+    return {
+      artist: DOMUtils.get(SELECTORS.editArtist).value.trim(),
+      year: DOMUtils.get(SELECTORS.editYear).value.trim(),
+      song_name: DOMUtils.get(SELECTORS.editSongName).value.trim(),
+      spotify_url: DOMUtils.get(SELECTORS.editSpotifyUrl).value.trim(),
+    };
+  },
+
+  /**
+   * Apply edited changes to preview
+   */
+  async applyChanges() {
+    const csvPath = DOMUtils.get(SELECTORS.previewCsvSelect).value;
+    const trackIndex =
+      parseInt(DOMUtils.get(SELECTORS.previewTrackIndex).value) - 1;
+    const editedData = this.getEditedTrackData();
+
+    if (!csvPath) {
+      ToastModule.error("Please select a CSV file first");
+      return;
+    }
+
+    // Validate required fields
+    if (!editedData.artist || !editedData.year || !editedData.song_name) {
+      ToastModule.error("Please fill in all required fields (Artist, Year, Song Name)");
+      return;
+    }
+
+    // Reload preview with edited data
+    await this.loadWithData(editedData);
+  },
+
+  /**
+   * Save edited changes to CSV
+   */
+  async saveToCsv() {
+    const csvPath = DOMUtils.get(SELECTORS.previewCsvSelect).value;
+    const trackIndex =
+      parseInt(DOMUtils.get(SELECTORS.previewTrackIndex).value) - 1;
+    const editedData = this.getEditedTrackData();
+
+    if (!csvPath) {
+      ToastModule.error("Please select a CSV file first");
+      return;
+    }
+
+    // Validate required fields
+    if (!editedData.artist || !editedData.year || !editedData.song_name) {
+      ToastModule.error("Please fill in all required fields (Artist, Year, Song Name)");
+      return;
+    }
+
+    try {
+      const result = await API.post("cards/update-track", {
+        csv_path: csvPath,
+        track_index: trackIndex,
+        track_data: editedData,
+      });
+
+      if (result.success) {
+        ToastModule.success(result.message || "Track saved successfully!");
+        // Update current track data
+        this.currentTrackData = { ...editedData };
+        // Reload preview to show saved data
+        await this.load();
+      }
+    } catch (error) {
+      ToastModule.error(error.message || "Failed to save track");
+    }
+  },
+
+  /**
+   * Reset editor to original values
+   */
+  resetEditor() {
+    if (this.currentTrackData) {
+      this.loadTrackDataIntoEditor(this.currentTrackData);
+    }
+  },
+
+  /**
+   * Load preview with custom track data
+   */
+  async loadWithData(trackData) {
+    const csvPath = DOMUtils.get(SELECTORS.previewCsvSelect).value;
+    const trackIndex =
+      parseInt(DOMUtils.get(SELECTORS.previewTrackIndex).value) - 1;
+
+    if (!csvPath) {
+      ToastModule.error("Please select a CSV file to preview");
+      return;
+    }
+
+    appState.preview.csvPath = csvPath;
+    appState.preview.trackIndex = trackIndex;
+
+    try {
+      const result = await API.post("cards/preview", {
+        csv_path: csvPath,
+        track_index: trackIndex,
+        side: appState.preview.side,
+        track_data: trackData,
+      });
+
+      if (result.success) {
+        const container = DOMUtils.get(SELECTORS.previewContainer);
+        const iframe = DOMUtils.create("iframe", {
+          style: "width: 100%; min-height: 600px; border: none;",
+        });
+
+        DOMUtils.render(container, [iframe]);
+
+        const iframeDoc =
+          iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(result.html);
+        iframeDoc.close();
+
+        // Update editor with returned track data
+        if (result.track_data) {
+          this.loadTrackDataIntoEditor(result.track_data);
+        }
+      }
+    } catch (error) {
+      DOMUtils.render(DOMUtils.get(SELECTORS.previewContainer), [
+        Components.createEmptyState(`Error: ${error.message}`),
+      ]);
     }
   },
 
@@ -65,6 +217,8 @@ export const PreviewModule = {
     if (newIndex >= 0 && newIndex < appState.preview.maxTracks) {
       appState.preview.trackIndex = newIndex;
       currentIndexInput.value = newIndex + 1;
+      // Reset current track data so editor loads fresh data
+      this.currentTrackData = null;
       this.load();
     } else {
       // Show feedback if at boundary
@@ -117,6 +271,15 @@ export const PreviewModule = {
         iframeDoc.open();
         iframeDoc.write(result.html);
         iframeDoc.close();
+
+        // Show editor and load track data
+        const editor = DOMUtils.get(SELECTORS.cardEditor);
+        if (editor) {
+          editor.style.display = "block";
+        }
+        if (result.track_data) {
+          this.loadTrackDataIntoEditor(result.track_data);
+        }
 
         // Store max tracks from response or fetch if not available
         if (result.total_tracks !== undefined) {

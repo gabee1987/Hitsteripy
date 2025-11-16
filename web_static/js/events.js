@@ -68,6 +68,15 @@ export const EventHandlers = {
     this.safeAddEventListener(SELECTORS.previewBackBtn, "click", () =>
       PreviewModule.setSide("back")
     );
+    this.safeAddEventListener(SELECTORS.applyEditBtn, "click", () =>
+      PreviewModule.applyChanges()
+    );
+    this.safeAddEventListener(SELECTORS.saveEditBtn, "click", () =>
+      PreviewModule.saveToCsv()
+    );
+    this.safeAddEventListener(SELECTORS.resetEditBtn, "click", () =>
+      PreviewModule.resetEditor()
+    );
 
     // Logs
     this.safeAddEventListener(SELECTORS.refreshLogsBtn, "click", () =>

@@ -416,6 +416,9 @@ def preview_card():
     track_index = data.get('track_index', 0)
     side = data.get('side', 'front')  # 'front' or 'back'
     
+    # Optional track data overrides for editing
+    track_override = data.get('track_data')
+    
     if not csv_path or not os.path.exists(csv_path):
         return jsonify({"success": False, "error": "CSV file not found"}), 400
     
@@ -435,19 +438,26 @@ def preview_card():
             return jsonify({"success": False, "error": "Track index out of range"}), 400
         
         track = tracks[track_index]
+        
+        # Use override data if provided, otherwise use CSV data
+        artist = track_override.get("artist") if track_override else track["Artist"]
+        year = track_override.get("year") if track_override else track["Year"]
+        song_name = track_override.get("song_name") if track_override else track["Song Name"]
+        spotify_url = track_override.get("spotify_url") if track_override else track["Spotify URL"]
+        
         idx = track_index + 1
         card_num_str = f"#{idx:03d}"
         
         # Prepare track data
         track_data = {
-            "artist": track["Artist"],
-            "year": track["Year"],
-            "song_name": track["Song Name"],
+            "artist": artist,
+            "year": year,
+            "song_name": song_name,
             "gradient": generate_random_gradient(),
             "front_serial": f"Front-{card_num_str}",
             "back_serial": f"Back-{card_num_str}",
             "qr_data_uri": generate_custom_qr_data_uri(
-                track["Spotify URL"],
+                spotify_url,
                 box_size=4,
                 border=2,
                 fill_color="black",
@@ -483,10 +493,72 @@ def preview_card():
         return jsonify({
             "success": True,
             "html": html,
-            "total_tracks": len(tracks)
+            "total_tracks": len(tracks),
+            "track_data": {
+                "artist": artist,
+                "year": year,
+                "song_name": song_name,
+                "spotify_url": spotify_url
+            }
         })
     except Exception as e:
         error_msg = str(e)
+        return jsonify({"success": False, "error": error_msg}), 500
+
+@app.route('/api/cards/update-track', methods=['POST'])
+def update_track():
+    """Update a track in the CSV file."""
+    data = request.json
+    csv_path = data.get('csv_path')
+    track_index = data.get('track_index', 0)
+    track_data = data.get('track_data')
+    
+    if not csv_path or not os.path.exists(csv_path):
+        return jsonify({"success": False, "error": "CSV file not found"}), 400
+    
+    if not track_data:
+        return jsonify({"success": False, "error": "Track data is required"}), 400
+    
+    try:
+        import csv
+        import shutil
+        from datetime import datetime
+        
+        # Read all tracks
+        with open(csv_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames
+            tracks = list(reader)
+        
+        if track_index >= len(tracks):
+            return jsonify({"success": False, "error": "Track index out of range"}), 400
+        
+        # Update the track
+        tracks[track_index]["Artist"] = track_data.get("artist", tracks[track_index]["Artist"])
+        tracks[track_index]["Year"] = track_data.get("year", tracks[track_index]["Year"])
+        tracks[track_index]["Song Name"] = track_data.get("song_name", tracks[track_index]["Song Name"])
+        tracks[track_index]["Spotify URL"] = track_data.get("spotify_url", tracks[track_index]["Spotify URL"])
+        
+        # Create backup
+        backup_path = f"{csv_path}.backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        shutil.copy2(csv_path, backup_path)
+        
+        # Write updated tracks
+        with open(csv_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(tracks)
+        
+        log_success(app_state, f"Updated track {track_index + 1} in CSV (backup: {os.path.basename(backup_path)})")
+        
+        return jsonify({
+            "success": True,
+            "message": f"Track {track_index + 1} updated successfully",
+            "backup_file": os.path.basename(backup_path)
+        })
+    except Exception as e:
+        error_msg = str(e)
+        log_error(app_state, f"Failed to update track: {error_msg}")
         return jsonify({"success": False, "error": error_msg}), 500
 
 @app.route('/api/logs')

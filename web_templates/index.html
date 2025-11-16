@@ -248,46 +248,105 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label for="previewTrackIndex">Track Number:</label>
-                <input
-                  type="number"
-                  id="previewTrackIndex"
-                  value="1"
-                  min="1"
-                  class="input-field"
-                  style="width: 100px"
-                />
-                <button class="btn btn-secondary" id="prevTrackBtn">
-                  ← Prev
-                </button>
-                <button class="btn btn-secondary" id="nextTrackBtn">
-                  Next →
-                </button>
-              </div>
-
-              <div class="form-group">
-                <label>Card Side:</label>
-                <button
-                  class="btn btn-secondary"
-                  data-side="front"
-                  id="previewFrontBtn"
-                >
-                  Front
-                </button>
-                <button
-                  class="btn btn-secondary active"
-                  data-side="back"
-                  id="previewBackBtn"
-                >
-                  Back
-                </button>
+              <div class="form-group form-group-row">
+                <div class="form-group-inline">
+                  <label for="previewTrackIndex">Track Number:</label>
+                  <input
+                    type="number"
+                    id="previewTrackIndex"
+                    value="1"
+                    min="1"
+                    class="input-field"
+                    style="width: 100px"
+                  />
+                  <button class="btn btn-secondary" id="prevTrackBtn">
+                    ← Prev
+                  </button>
+                  <button class="btn btn-secondary" id="nextTrackBtn">
+                    Next →
+                  </button>
+                </div>
+                <div class="form-group-inline">
+                  <label>Card Side:</label>
+                  <button
+                    class="btn btn-secondary"
+                    data-side="front"
+                    id="previewFrontBtn"
+                  >
+                    Front
+                  </button>
+                  <button
+                    class="btn btn-secondary active"
+                    data-side="back"
+                    id="previewBackBtn"
+                  >
+                    Back
+                  </button>
+                </div>
               </div>
 
               <div class="form-group">
                 <button class="btn btn-primary" id="loadPreviewBtn">
                   Load Preview
                 </button>
+              </div>
+            </div>
+
+            <!-- Card Editor Section -->
+            <div class="card-editor" id="cardEditor" style="display: none">
+              <h3>Edit Card Data</h3>
+              <div class="editor-fields">
+                <div class="editor-row">
+                  <div class="editor-field">
+                    <label for="editArtist">Artist:</label>
+                    <input
+                      type="text"
+                      id="editArtist"
+                      class="input-field"
+                      placeholder="Artist name"
+                    />
+                  </div>
+                  <div class="editor-field">
+                    <label for="editSongName">Song Name:</label>
+                    <input
+                      type="text"
+                      id="editSongName"
+                      class="input-field"
+                      placeholder="Song name"
+                    />
+                  </div>
+                </div>
+                <div class="editor-row">
+                  <div class="editor-field editor-field-small">
+                    <label for="editYear">Year:</label>
+                    <input
+                      type="text"
+                      id="editYear"
+                      class="input-field"
+                      placeholder="Year"
+                    />
+                  </div>
+                  <div class="editor-field editor-field-large">
+                    <label for="editSpotifyUrl">Spotify URL:</label>
+                    <input
+                      type="text"
+                      id="editSpotifyUrl"
+                      class="input-field"
+                      placeholder="https://open.spotify.com/track/..."
+                    />
+                  </div>
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px">
+                  <button class="btn btn-primary" id="applyEditBtn">
+                    Apply Changes
+                  </button>
+                  <button class="btn btn-secondary" id="saveEditBtn">
+                    Save to CSV
+                  </button>
+                  <button class="btn btn-secondary" id="resetEditBtn">
+                    Reset
+                  </button>
+                </div>
               </div>
             </div>
 

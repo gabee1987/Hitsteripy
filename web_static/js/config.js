@@ -48,6 +48,14 @@ export const SELECTORS = {
   previewContainer: "previewContainer",
   prevTrackBtn: "prevTrackBtn",
   nextTrackBtn: "nextTrackBtn",
+  cardEditor: "cardEditor",
+  editArtist: "editArtist",
+  editYear: "editYear",
+  editSongName: "editSongName",
+  editSpotifyUrl: "editSpotifyUrl",
+  applyEditBtn: "applyEditBtn",
+  saveEditBtn: "saveEditBtn",
+  resetEditBtn: "resetEditBtn",
 
   // Logs
   logsContainer: "logsContainer",
