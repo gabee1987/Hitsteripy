@@ -31,9 +31,20 @@ web_static_dir = os.path.join(parent_dir, 'web_static')
 os.makedirs(web_templates_dir, exist_ok=True)
 os.makedirs(web_static_dir, exist_ok=True)
 
+# Verify template exists
+template_path = os.path.join(web_templates_dir, 'index.html')
+if not os.path.exists(template_path):
+    print(f"WARNING: Template not found at {template_path}")
+else:
+    print(f"Template found at: {template_path}")
+
 app = Flask(__name__, 
             template_folder=web_templates_dir,
-            static_folder=web_static_dir)
+            static_folder=web_static_dir,
+            static_url_path='/static')
+
+# Disable caching in development
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # App state (shared across requests)
 app_state = {
@@ -93,8 +104,48 @@ def ensure_spotify_init():
 @app.route('/')
 def index():
     """Main page."""
+    print("=" * 60)
+    print("[DEBUG] INDEX ROUTE CALLED!")
+    print("=" * 60)
+    
     ensure_spotify_init()
-    return render_template('index.html')
+    # Add cache-busting for development
+    import time
+    cache_bust = int(time.time())
+    
+    # Log template path for debugging
+    template_path = os.path.join(web_templates_dir, 'index.html')
+    print(f"[DEBUG] Template path: {template_path}")
+    print(f"[DEBUG] Template exists: {os.path.exists(template_path)}")
+    
+    if not os.path.exists(template_path):
+        return f"ERROR: Template not found at {template_path}", 500
+    
+    # Read raw template content to verify
+    with open(template_path, 'r', encoding='utf-8') as f:
+        raw_content = f.read()
+        print(f"[DEBUG] Template file size: {len(raw_content)} bytes")
+        print(f"[DEBUG] Template contains 'themeToggle': {'themeToggle' in raw_content}")
+        print(f"[DEBUG] Template contains 'Version check: v2': {'Version check: v2' in raw_content}")
+    
+    # Use Flask's render_template (which has Flask context like url_for)
+    # Flask's template caching is already disabled via app.jinja_env.auto_reload = True
+    html_content = render_template('index.html', cache_bust=cache_bust)
+    
+    print(f"[DEBUG] Rendered HTML size: {len(html_content)} bytes")
+    print(f"[DEBUG] Rendered HTML contains 'themeToggle': {'themeToggle' in html_content}")
+    print(f"[DEBUG] Rendered HTML contains 'Version check: v2': {'Version check: v2' in html_content}")
+    print("=" * 60)
+    
+    # Create response with cache-busting headers
+    from flask import Response
+    response = Response(html_content, mimetype='text/html')
+    # Prevent caching in development
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    response.headers['Last-Modified'] = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime())
+    return response
 
 @app.route('/api/status')
 def get_status():
@@ -119,6 +170,7 @@ def get_playlist_history():
 @app.route('/api/playlists/set', methods=['POST'])
 def set_playlist():
     """Set playlist URL."""
+    ensure_spotify_init()
     data = request.json
     url = data.get('url', '').strip()
     
@@ -144,7 +196,12 @@ def set_playlist():
         if not any(p["url"] == url for p in playlist_history):
             new_entry = {"name": playlist_name, "url": url}
             playlist_history.insert(0, new_entry)
-            save_history(PLAYLIST_HISTORY_FILE, playlist_history)
+        else:
+            # Move to front if already exists
+            playlist_history = [p for p in playlist_history if p["url"] != url]
+            playlist_history.insert(0, {"name": playlist_name, "url": url})
+        
+        save_history(PLAYLIST_HISTORY_FILE, playlist_history)
         
         log_success(app_state, f"Playlist set: {playlist_name} ({url})")
         
@@ -156,6 +213,29 @@ def set_playlist():
     except Exception as e:
         error_msg = str(e)
         log_error(app_state, f"Failed to set playlist: {error_msg}")
+        return jsonify({"success": False, "error": error_msg}), 500
+
+@app.route('/api/playlists/delete', methods=['POST'])
+def delete_playlist():
+    """Delete playlist from history."""
+    ensure_spotify_init()
+    data = request.json
+    url = data.get('url', '').strip()
+    
+    if not url:
+        return jsonify({"success": False, "error": "URL is required"}), 400
+    
+    try:
+        playlist_history = load_history(PLAYLIST_HISTORY_FILE)
+        playlist_history = [p for p in playlist_history if p["url"] != url]
+        save_history(PLAYLIST_HISTORY_FILE, playlist_history)
+        
+        log_info(app_state, f"Playlist deleted from history: {url}")
+        
+        return jsonify({"success": True})
+    except Exception as e:
+        error_msg = str(e)
+        log_error(app_state, f"Failed to delete playlist: {error_msg}")
         return jsonify({"success": False, "error": error_msg}), 500
 
 @app.route('/api/tracks/count/history')
@@ -401,7 +481,12 @@ def run_web_app(host='127.0.0.1', port=5000, open_browser=True):
     print(f"  Press Ctrl+C to stop the server")
     print(f"{'='*60}\n")
     
-    app.run(host=host, port=port, debug=False, use_reloader=False)
+    # Run with debug mode for auto-reload (development)
+    # Disable Flask's template caching completely
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.jinja_env.auto_reload = True
+    app.jinja_env.cache = {}
+    app.run(host=host, port=port, debug=True, use_reloader=False)
 
 if __name__ == '__main__':
     run_web_app()

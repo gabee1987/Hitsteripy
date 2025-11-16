@@ -3,17 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Hitsteripy - Spotify Track Card Generator</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('static', filename='style.css') }}?v={{ cache_bust if cache_bust else '' }}"
     />
+    <script>
+      // Disable service workers if any are registered
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister().then(function (boolean) {
+                console.log("Service Worker unregistered:", boolean);
+              });
+            }
+          });
+      }
+    </script>
   </head>
   <body>
+    <!-- Version check: v2 - Theme toggle and playlist tabs should be visible -->
+    <!-- Cache bust timestamp: {{ cache_bust }} -->
     <div class="app-container">
       <header class="app-header">
         <h1>🌟 Hitsteripy</h1>
         <p class="subtitle">Spotify Track Card Generator</p>
+        <!-- DEBUG: Visible version indicator -->
+        <div
+          id="htmlVersionCheck"
+          style="
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            padding: 5px;
+            z-index: 10000;
+          "
+        >
+          OLD CACHED VERSION DETECTED!
+        </div>
       </header>
 
       <div class="status-bar" id="statusBar">
@@ -28,6 +66,22 @@
         <div class="status-item">
           <span class="status-label">Spotify:</span>
           <span class="status-value" id="statusSpotify">Connecting...</span>
+        </div>
+        <div
+          class="status-item status-item-right"
+          style="
+            display: flex !important;
+            visibility: visible !important;
+            align-items: center;
+            gap: 8px;
+          "
+        >
+          <span style="font-size: 0.9rem; color: var(--text-light)">Light</span>
+          <label class="theme-toggle-switch" title="Toggle dark/light mode">
+            <input type="checkbox" id="themeToggle" />
+            <span class="theme-toggle-slider"></span>
+          </label>
+          <span style="font-size: 0.9rem; color: var(--text-light)">Dark</span>
         </div>
       </div>
 
@@ -58,9 +112,42 @@
             </div>
 
             <div class="history-section">
-              <h3>Recent Playlists</h3>
+              <div class="history-tabs">
+                <button
+                  class="history-tab-btn active"
+                  data-history-type="recent"
+                  id="playlistTabRecent"
+                >
+                  Recent Playlists
+                </button>
+                <button
+                  class="history-tab-btn"
+                  data-history-type="all"
+                  id="playlistTabAll"
+                >
+                  All Playlists
+                </button>
+              </div>
               <div id="playlistHistory" class="history-list"></div>
             </div>
+          </div>
+        </div>
+
+        <!-- Import Tab -->
+        <div class="tab-content" id="tab-import">
+          <div class="card">
+            <h2>Import Tracks</h2>
+            <p class="info-text">
+              Import tracks from your selected playlist to a CSV file.
+            </p>
+
+            <div class="form-group">
+              <button class="btn btn-primary btn-large" id="importTracksBtn">
+                📥 Import Tracks
+              </button>
+            </div>
+
+            <div id="importStatus" class="status-message"></div>
           </div>
 
           <div class="card">
@@ -90,24 +177,6 @@
               <h3>Recent Counts</h3>
               <div id="trackCountHistory" class="history-list"></div>
             </div>
-          </div>
-        </div>
-
-        <!-- Import Tab -->
-        <div class="tab-content" id="tab-import">
-          <div class="card">
-            <h2>Import Tracks</h2>
-            <p class="info-text">
-              Import tracks from your selected playlist to a CSV file.
-            </p>
-
-            <div class="form-group">
-              <button class="btn btn-primary btn-large" id="importTracksBtn">
-                📥 Import Tracks
-              </button>
-            </div>
-
-            <div id="importStatus" class="status-message"></div>
           </div>
         </div>
 
@@ -211,6 +280,9 @@
       </main>
     </div>
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='app.js') }}?v={{ cache_bust if cache_bust else '' }}"
+    ></script>
   </body>
 </html>
