@@ -131,6 +131,27 @@ export const PreviewModule = {
   },
 
   /**
+   * Copy Spotify URL to clipboard
+   */
+  async copySpotifyUrl() {
+    const urlInput = DOMUtils.get(SELECTORS.editSpotifyUrl);
+    if (!urlInput || !urlInput.value) {
+      ToastModule.error("No URL to copy");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(urlInput.value);
+      ToastModule.success("URL copied to clipboard!");
+    } catch (error) {
+      // Fallback for older browsers
+      urlInput.select();
+      document.execCommand("copy");
+      ToastModule.success("URL copied to clipboard!");
+    }
+  },
+
+  /**
    * Load preview with custom track data
    */
   async loadWithData(trackData) {

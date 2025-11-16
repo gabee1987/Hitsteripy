@@ -1,0 +1,120 @@
+/**
+ * Color Variables - Easy to edit theme colors
+ * 
+ * This file contains all color variables for both light and dark modes.
+ * Edit the values below to customize the appearance of the application.
+ */
+
+/* ============================================================================
+   LIGHT MODE COLORS
+   ============================================================================ */
+:root {
+  /* Primary Colors */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+
+  /* Accent Colors */
+  --secondary: #8b5cf6;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Background Colors */
+  --bg: #e4e8ef;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+
+  /* Border Colors */
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-dark: #cbd5e1;
+
+  /* Input Colors */
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-border-focus: #6366f1;
+  --input-placeholder: #94a3b8;
+
+  /* Text Colors */
+  --text: #1e293b;
+  --text-light: #64748b;
+  --text-lighter: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Shadow Colors */
+  --shadow: 0px 2px 6px 0px rgba(136, 165, 191, 0.48);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Button Colors */
+  --btn-primary-bg: #6366f1;
+  --btn-primary-hover: #4f46e5;
+  --btn-secondary-bg: #9596d9;
+  --btn-secondary-hover: #e2e8f0;
+  --btn-text: #1e293b;
+
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-error: #ef4444;
+  --status-warning: #f59e0b;
+  --status-info: #3b82f6;
+}
+
+/* ============================================================================
+   DARK MODE COLORS
+   ============================================================================ */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --primary: #818cf8;
+  --primary-dark: #6366f1;
+  --primary-light: #a5b4fc;
+
+  /* Accent Colors */
+  --secondary: #a78bfa;
+  --success: #34d399;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+
+  /* Background Colors */
+  --bg: #111827;
+  --surface: #1f2937;
+  --surface-hover: #374151;
+
+  /* Border Colors */
+  --border: #374151;
+  --border-light: #4b5563;
+  --border-dark: #1f2937;
+
+  /* Input Colors */
+  --input-bg: #1f2937;
+  --input-border: #374151;
+  --input-border-focus: #818cf8;
+  --input-placeholder: #6b7280;
+
+  /* Text Colors */
+  --text: #f9fafb;
+  --text-light: #9ca3af;
+  --text-lighter: #6b7280;
+  --text-inverse: #1e293b;
+
+  /* Shadow Colors */
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+  /* Button Colors */
+  --btn-primary-bg: #818cf8;
+  --btn-primary-hover: #6366f1;
+  --btn-secondary-bg: #374151;
+  --btn-secondary-hover: #4b5563;
+  --btn-text: #f9fafb;
+
+  /* Status Colors */
+  --status-success: #34d399;
+  --status-error: #f87171;
+  --status-warning: #fbbf24;
+  --status-info: #60a5fa;
+}

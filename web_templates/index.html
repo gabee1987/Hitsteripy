@@ -9,7 +9,11 @@
     />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>Hitsteripy - Spotify Track Card Generator</title>
+    <title>TuneGen - Spotify Track Card Generator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/colors.css') }}?v={{ cache_bust if cache_bust else '' }}"
+    />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}?v={{ cache_bust if cache_bust else '' }}"
@@ -51,7 +55,7 @@
 
     <div class="app-header-unified sticky-header" id="appHeader">
       <div class="header-content">
-        <div class="nav-logo">🌟 Hitsteripy</div>
+        <div class="nav-logo">🎵 TuneGen</div>
         <nav class="nav-tabs">
           <button class="tab-btn active" data-tab="playlist">
             🎵 Playlist
@@ -352,12 +356,22 @@
                     </div>
                     <div class="editor-field editor-field-large">
                       <label for="editSpotifyUrl">Spotify URL:</label>
-                      <input
-                        type="text"
-                        id="editSpotifyUrl"
-                        class="input-field"
-                        placeholder="https://open.spotify.com/track/..."
-                      />
+                      <div class="input-with-copy-wrapper">
+                        <input
+                          type="text"
+                          id="editSpotifyUrl"
+                          class="input-field"
+                          placeholder="https://open.spotify.com/track/..."
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-secondary copy-url-btn"
+                          id="copySpotifyUrlBtn"
+                          title="Copy URL"
+                        >
+                          📋
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div class="form-group" style="display: flex; gap: 10px">

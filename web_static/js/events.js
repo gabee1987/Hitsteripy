@@ -77,6 +77,9 @@ export const EventHandlers = {
     this.safeAddEventListener(SELECTORS.resetEditBtn, "click", () =>
       PreviewModule.resetEditor()
     );
+    this.safeAddEventListener(SELECTORS.copySpotifyUrlBtn, "click", () =>
+      PreviewModule.copySpotifyUrl()
+    );
 
     // Logs
     this.safeAddEventListener(SELECTORS.refreshLogsBtn, "click", () =>

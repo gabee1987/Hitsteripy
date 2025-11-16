@@ -53,6 +53,7 @@ export const SELECTORS = {
   editYear: "editYear",
   editSongName: "editSongName",
   editSpotifyUrl: "editSpotifyUrl",
+  copySpotifyUrlBtn: "copySpotifyUrlBtn",
   applyEditBtn: "applyEditBtn",
   saveEditBtn: "saveEditBtn",
   resetEditBtn: "resetEditBtn",
