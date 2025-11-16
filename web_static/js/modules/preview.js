@@ -5,9 +5,9 @@
 import { API } from "../api.js";
 import { DOMUtils } from "../dom-utils.js";
 import { Components } from "../components.js";
-import { Utils } from "../utils.js";
 import { SELECTORS } from "../config.js";
 import { appState } from "../state.js";
+import { ToastModule } from "./toast.js";
 
 export const PreviewModule = {
   /**
@@ -49,11 +49,7 @@ export const PreviewModule = {
       parseInt(DOMUtils.get(SELECTORS.previewTrackIndex).value) - 1;
 
     if (!csvPath) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        "Please select a CSV file",
-        "error"
-      );
+      ToastModule.error("Please select a CSV file to preview");
       return;
     }
 

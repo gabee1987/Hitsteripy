@@ -13,20 +13,14 @@ export const Utils = {
   },
 
   /**
-   * Show status message
+   * Show toast message (delegates to ToastModule)
+   * @deprecated Use ToastModule directly for better control
    */
-  showMessage(elementId, message, type) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-
-    element.textContent = message;
-    element.className = `status-message ${type}`;
-
-    if (type === "success") {
-      setTimeout(() => {
-        element.className = "status-message";
-      }, 5000);
-    }
+  showMessage(message, type = "info") {
+    // Import dynamically to avoid circular dependencies
+    import("./modules/toast.js").then(({ ToastModule }) => {
+      ToastModule.show(message, type);
+    });
   },
 };
 

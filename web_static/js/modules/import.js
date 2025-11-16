@@ -4,11 +4,11 @@
 
 import { API } from "../api.js";
 import { DOMUtils } from "../dom-utils.js";
-import { Utils } from "../utils.js";
 import { SELECTORS } from "../config.js";
 import { appState } from "../state.js";
 import { CsvModule } from "./csv.js";
 import { ProgressModule } from "./progress.js";
+import { ToastModule } from "./toast.js";
 
 export const ImportModule = {
   /**
@@ -16,20 +16,12 @@ export const ImportModule = {
    */
   async import() {
     if (!appState.status.playlist_url) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        "Please set a playlist URL first",
-        "error"
-      );
+      ToastModule.error("Please set a playlist URL first");
       return;
     }
 
     if (!appState.status.track_count) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        "Please set a track count first",
-        "error"
-      );
+      ToastModule.error("Please set a track count first");
       return;
     }
 
@@ -37,22 +29,22 @@ export const ImportModule = {
       const btn = DOMUtils.get(SELECTORS.importTracksBtn);
       if (btn) btn.disabled = true;
       
-      ProgressModule.show("Importing tracks...");
+      const playlistName = appState.status.playlist_name || "playlist";
+      const trackCount = appState.status.track_count === "all" ? "all tracks" : `${appState.status.track_count} tracks`;
+      
+      ProgressModule.show(`Importing ${trackCount} from "${playlistName}"...`);
 
       const result = await API.post("tracks/import", {});
 
       if (result.success) {
-        Utils.showMessage(SELECTORS.importStatus, result.summary, "success");
+        // The summary already contains useful info like "243 tracks imported to imported_tracks\20251116_122459_all\TuneTrack Apa_tracks.csv"
+        ToastModule.success(result.summary || "Tracks imported successfully");
         CsvModule.load();
         setTimeout(() => ProgressModule.hide(), 1000);
       }
     } catch (error) {
       ProgressModule.hide();
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`Import failed: ${error.message}`);
     } finally {
       const btn = DOMUtils.get(SELECTORS.importTracksBtn);
       if (btn) btn.disabled = false;

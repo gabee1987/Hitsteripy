@@ -5,9 +5,9 @@
 import { API } from "../api.js";
 import { DOMUtils } from "../dom-utils.js";
 import { Components } from "../components.js";
-import { Utils } from "../utils.js";
 import { CONFIG, SELECTORS } from "../config.js";
 import { StatusModule } from "./status.js";
+import { ToastModule } from "./toast.js";
 
 export const TrackCountModule = {
   /**
@@ -56,11 +56,7 @@ export const TrackCountModule = {
   async set() {
     const count = DOMUtils.get(SELECTORS.trackCount).value.trim();
     if (!count) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        "Please enter a track count",
-        "error"
-      );
+      ToastModule.error("Please enter a track count (number or 'all')");
       return;
     }
 
@@ -68,21 +64,14 @@ export const TrackCountModule = {
       const result = await API.post("tracks/count/set", { count });
 
       if (result.success) {
-        Utils.showMessage(
-          SELECTORS.importStatus,
-          `Track count set to: ${result.track_count}`,
-          "success"
-        );
+        const trackCount = result.track_count === "all" ? "all tracks" : `${result.track_count} tracks`;
+        ToastModule.success(`Track count set to ${trackCount}`);
         DOMUtils.get(SELECTORS.trackCount).value = "";
         StatusModule.load();
         this.loadHistory();
       }
     } catch (error) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`Failed to set track count: ${error.message}`);
     }
   },
 };

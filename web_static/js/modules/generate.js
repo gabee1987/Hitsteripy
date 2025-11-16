@@ -4,10 +4,10 @@
 
 import { API } from "../api.js";
 import { DOMUtils } from "../dom-utils.js";
-import { Utils } from "../utils.js";
 import { SELECTORS } from "../config.js";
 import { Components } from "../components.js";
 import { ProgressModule } from "./progress.js";
+import { ToastModule } from "./toast.js";
 
 export const GenerateModule = {
   /**
@@ -17,11 +17,7 @@ export const GenerateModule = {
     const csvPath = DOMUtils.get(SELECTORS.csvFileSelect).value;
 
     if (!csvPath) {
-      Utils.showMessage(
-        SELECTORS.generateStatus,
-        "Please select a CSV file",
-        "error"
-      );
+      ToastModule.error("Please select a CSV file to generate cards");
       return;
     }
 
@@ -34,7 +30,9 @@ export const GenerateModule = {
       const result = await API.post("cards/generate", { csv_path: csvPath });
       
       if (result.success) {
-        Utils.showMessage(SELECTORS.generateStatus, result.summary, "success");
+        // Extract useful info from summary
+        const summary = result.summary || "Cards generated successfully";
+        ToastModule.success(summary);
         // Reload generated cards list
         this.loadGeneratedCards();
       }
@@ -42,11 +40,7 @@ export const GenerateModule = {
       setTimeout(() => ProgressModule.hide(), 1000);
     } catch (error) {
       ProgressModule.hide();
-      Utils.showMessage(
-        SELECTORS.generateStatus,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`Failed to generate cards: ${error.message}`);
     } finally {
       const btn = DOMUtils.get(SELECTORS.generateCardsBtn);
       if (btn) btn.disabled = false;
@@ -85,6 +79,30 @@ export const GenerateModule = {
     const header = DOMUtils.create("div", { class: "card-set-header" });
     header.appendChild(DOMUtils.create("h3", {}, [set.name]));
     header.appendChild(DOMUtils.create("span", { class: "card-set-count" }, [`${set.count} files`]));
+
+    // Create action buttons container at the top
+    const actionsDiv = DOMUtils.create("div", { class: "card-set-actions" });
+    
+    // Generate PDFs button
+    const generatePdfBtn = DOMUtils.create("button", {
+      class: "btn btn-secondary",
+    }, [set.has_all_pdfs ? "✅ All PDFs Generated" : "📄 Generate All PDFs"]);
+    
+    if (!set.has_all_pdfs) {
+      generatePdfBtn.addEventListener("click", () => this.generatePdfs(set.path));
+    } else {
+      generatePdfBtn.disabled = true;
+    }
+    actionsDiv.appendChild(generatePdfBtn);
+
+    // Print all button
+    if (set.files.length > 0) {
+      const printAllBtn = DOMUtils.create("button", {
+        class: "btn btn-primary",
+      }, ["🖨️ Print All Pages"]);
+      printAllBtn.addEventListener("click", () => this.printAllPages(set.files.map(f => f.url)));
+      actionsDiv.appendChild(printAllBtn);
+    }
 
     const filesDiv = DOMUtils.create("div", { class: "card-set-files" });
     
@@ -131,43 +149,12 @@ export const GenerateModule = {
         buttonsDiv.appendChild(backBtn);
       }
 
-      // Print both button
-      if (page.front && page.back) {
-        const printBothBtn = DOMUtils.create("button", {
-          class: "btn btn-primary btn-sm",
-        }, ["🖨️ Print Both"]);
-        printBothBtn.addEventListener("click", () => this.printBothPages(page.front.url, page.back.url));
-        buttonsDiv.appendChild(printBothBtn);
-      }
-
       pageDiv.appendChild(buttonsDiv);
       filesDiv.appendChild(pageDiv);
     });
 
-    // Generate PDFs button
-    const generatePdfBtn = DOMUtils.create("button", {
-      class: "btn btn-secondary",
-      style: "margin-top: 15px; width: 100%;"
-    }, [set.has_all_pdfs ? "✅ All PDFs Generated" : "📄 Generate All PDFs"]);
-    
-    if (!set.has_all_pdfs) {
-      generatePdfBtn.addEventListener("click", () => this.generatePdfs(set.path));
-    } else {
-      generatePdfBtn.disabled = true;
-    }
-    filesDiv.appendChild(generatePdfBtn);
-
-    // Print all button
-    if (set.files.length > 0) {
-      const printAllBtn = DOMUtils.create("button", {
-        class: "btn btn-primary",
-        style: "margin-top: 10px; width: 100%;"
-      }, ["🖨️ Print All Pages"]);
-      printAllBtn.addEventListener("click", () => this.printAllPages(set.files.map(f => f.url)));
-      filesDiv.appendChild(printAllBtn);
-    }
-
     setDiv.appendChild(header);
+    setDiv.appendChild(actionsDiv);
     setDiv.appendChild(filesDiv);
     return setDiv;
   },
@@ -333,26 +320,25 @@ export const GenerateModule = {
       const result = await API.post("cards/generate-pdfs", { path: cardSetPath });
       
       if (result.success) {
-        const message = result.message || `Generated ${result.generated?.length || 0} PDF file(s)`;
-        Utils.showMessage(statusElement, message, "success");
+        const pdfCount = result.generated?.length || 0;
+        if (pdfCount > 0) {
+          ToastModule.success(`Generated ${pdfCount} PDF file${pdfCount === 1 ? '' : 's'} and saved to pdfs/ folder`);
+        } else {
+          ToastModule.info("PDF generation completed");
+        }
         // Reload the generated cards list to show updated PDF status
         this.loadGeneratedCards();
         setTimeout(() => ProgressModule.hide(), 1500);
       } else {
         ProgressModule.hide();
-        Utils.showMessage(
-          statusElement,
-          `Error: ${result.error || "Failed to generate PDFs"}`,
-          "error"
-        );
+        const errorMsg = result.error || "Failed to generate PDFs";
+        ToastModule.error(errorMsg.includes("GTK") || errorMsg.includes("WeasyPrint") 
+          ? errorMsg 
+          : `PDF generation failed: ${errorMsg}`);
       }
     } catch (error) {
       ProgressModule.hide();
-      Utils.showMessage(
-        statusElement,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`PDF generation error: ${error.message}`);
     }
   },
 };

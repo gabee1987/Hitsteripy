@@ -5,10 +5,10 @@
 import { API } from "../api.js";
 import { DOMUtils } from "../dom-utils.js";
 import { Components } from "../components.js";
-import { Utils } from "../utils.js";
 import { CONFIG, SELECTORS } from "../config.js";
 import { appState } from "../state.js";
 import { StatusModule } from "./status.js";
+import { ToastModule } from "./toast.js";
 
 export const PlaylistModule = {
   /**
@@ -59,11 +59,7 @@ export const PlaylistModule = {
   async set() {
     const url = DOMUtils.get(SELECTORS.playlistUrl).value.trim();
     if (!url) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        "Please enter a playlist URL",
-        "error"
-      );
+      ToastModule.error("Please enter a Spotify playlist URL");
       return;
     }
 
@@ -74,21 +70,14 @@ export const PlaylistModule = {
       const result = await API.post("playlists/set", { url });
 
       if (result.success) {
-        Utils.showMessage(
-          SELECTORS.importStatus,
-          `Playlist set: ${result.playlist_name}`,
-          "success"
-        );
+        const playlistName = result.playlist_name || "Unknown Playlist";
+        ToastModule.success(`Playlist set: "${playlistName}"`);
         DOMUtils.get(SELECTORS.playlistUrl).value = "";
         StatusModule.load();
         this.loadHistory(appState.playlistHistoryType);
       }
     } catch (error) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`Failed to set playlist: ${error.message}`);
     } finally {
       const btn = DOMUtils.get(SELECTORS.setPlaylistBtn);
       if (btn) btn.disabled = false;
@@ -108,18 +97,10 @@ export const PlaylistModule = {
       if (result.success) {
         this.loadHistory(appState.playlistHistoryType);
         StatusModule.load();
-        Utils.showMessage(
-          SELECTORS.importStatus,
-          "Playlist deleted from history",
-          "success"
-        );
+        ToastModule.success("Playlist removed from history");
       }
     } catch (error) {
-      Utils.showMessage(
-        SELECTORS.importStatus,
-        `Error: ${error.message}`,
-        "error"
-      );
+      ToastModule.error(`Failed to delete playlist: ${error.message}`);
     }
   },
 
