@@ -25,6 +25,7 @@
   }
   
   .page {
+    /* Only add page break if not the last page */
     page-break-after: always;
     page-break-inside: avoid;
     print-color-adjust: exact !important;
@@ -32,8 +33,11 @@
     color-adjust: exact !important;
   }
   
-  .page:last-child {
-    page-break-after: auto;
+  /* Remove page break from last page to prevent blank page */
+  body > .page:last-of-type,
+  .page:last-child,
+  .page.last-page {
+    page-break-after: auto !important;
   }
   
   .card {
@@ -52,11 +56,21 @@
   }
   
   /* Ensure gradients and backgrounds print */
+  /* CRITICAL: Don't set background here - let inline styles with !important take precedence */
   .front {
-    background: hsl(210, 50%, 90%) !important;
+    /* Only set print-color-adjust properties */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+    /* DO NOT set background here - inline gradient style must win */
+  }
+  
+  /* Additional rule to ensure inline gradient styles are preserved */
+  .card.front[style*="gradient"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    /* Let the inline style handle background */
   }
   
   .back {
@@ -104,7 +118,13 @@ body {
 
 .front {
   text-align: center;
-  background: hsl(210, 50%, 90%);
+  /* Default fallback background - will be overridden by inline gradient styles */
+  /* Only apply if no inline background is specified */
+}
+
+/* Ensure inline gradient styles work in both screen and print */
+.front[style*="background"] {
+  /* Let inline gradient styles take precedence - don't override */
 }
 
 .front .artist {

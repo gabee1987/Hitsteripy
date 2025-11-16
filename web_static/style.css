@@ -126,6 +126,93 @@ body {
   color: var(--error);
 }
 
+/* Progress Bar / Loading Indicator */
+.progress-bar-container {
+  background: var(--surface);
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-bar-label {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* Indeterminate loading animation */
+.progress-bar-fill.indeterminate {
+  width: 30% !important;
+  animation: loading-slide 1.5s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--secondary) 50%,
+    var(--primary) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading-slide 1.5s ease-in-out infinite,
+    loading-gradient 2s linear infinite;
+}
+
+@keyframes loading-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(350%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes loading-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.progress-bar-percent {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-weight: 600;
+  min-width: 45px;
+  text-align: right;
+}
+
 .tabs {
   display: flex;
   gap: 5px;

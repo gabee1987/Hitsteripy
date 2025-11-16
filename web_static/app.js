@@ -12,6 +12,7 @@ import { TrackCountModule } from "./js/modules/trackCount.js";
 import { CsvModule } from "./js/modules/csv.js";
 import { GenerateModule } from "./js/modules/generate.js";
 import { ThemeModule } from "./js/modules/theme.js";
+import { ProgressModule } from "./js/modules/progress.js";
 
 // ============================================================================
 // Initialization

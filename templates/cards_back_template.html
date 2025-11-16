@@ -12,7 +12,7 @@
     </style>
   </head>
   <body>
-    <div class="page">
+    <div class="page{% if page_number == total_pages %} last-page{% endif %}">
       {% for track in tracks %}
       <div class="card back">
         <!-- Because we embed QR code in data URIs, use track.qr_data_uri -->

@@ -12,9 +12,9 @@
     </style>
   </head>
   <body>
-    <div class="page">
+    <div class="page{% if page_number == total_pages %} last-page{% endif %}">
       {% for track in tracks %}
-      <div class="card front" style="background: {{ track.gradient }};">
+      <div class="card front" style="background: {{ track.gradient }} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important;">
         <div class="artist">{{ track.artist }}</div>
         <div class="year">{{ track.year }}</div>
         <div class="song-name">{{ track.song_name }}</div>

@@ -68,7 +68,8 @@ export const PlaylistModule = {
     }
 
     try {
-      DOMUtils.setButtonLoading(SELECTORS.setPlaylistBtn, " Setting...");
+      const btn = DOMUtils.get(SELECTORS.setPlaylistBtn);
+      if (btn) btn.disabled = true;
 
       const result = await API.post("playlists/set", { url });
 
@@ -89,7 +90,8 @@ export const PlaylistModule = {
         "error"
       );
     } finally {
-      DOMUtils.resetButton(SELECTORS.setPlaylistBtn, "Set Playlist");
+      const btn = DOMUtils.get(SELECTORS.setPlaylistBtn);
+      if (btn) btn.disabled = false;
     }
   },
 

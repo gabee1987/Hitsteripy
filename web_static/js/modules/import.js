@@ -8,6 +8,7 @@ import { Utils } from "../utils.js";
 import { SELECTORS } from "../config.js";
 import { appState } from "../state.js";
 import { CsvModule } from "./csv.js";
+import { ProgressModule } from "./progress.js";
 
 export const ImportModule = {
   /**
@@ -33,22 +34,28 @@ export const ImportModule = {
     }
 
     try {
-      DOMUtils.setButtonLoading(SELECTORS.importTracksBtn, " Importing...");
+      const btn = DOMUtils.get(SELECTORS.importTracksBtn);
+      if (btn) btn.disabled = true;
+      
+      ProgressModule.show("Importing tracks...");
 
       const result = await API.post("tracks/import", {});
 
       if (result.success) {
         Utils.showMessage(SELECTORS.importStatus, result.summary, "success");
         CsvModule.load();
+        setTimeout(() => ProgressModule.hide(), 1000);
       }
     } catch (error) {
+      ProgressModule.hide();
       Utils.showMessage(
         SELECTORS.importStatus,
         `Error: ${error.message}`,
         "error"
       );
     } finally {
-      DOMUtils.resetButton(SELECTORS.importTracksBtn, "📥 Import Tracks");
+      const btn = DOMUtils.get(SELECTORS.importTracksBtn);
+      if (btn) btn.disabled = false;
     }
   },
 };

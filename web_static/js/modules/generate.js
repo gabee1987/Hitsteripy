@@ -7,6 +7,7 @@ import { DOMUtils } from "../dom-utils.js";
 import { Utils } from "../utils.js";
 import { SELECTORS } from "../config.js";
 import { Components } from "../components.js";
+import { ProgressModule } from "./progress.js";
 
 export const GenerateModule = {
   /**
@@ -25,23 +26,30 @@ export const GenerateModule = {
     }
 
     try {
-      DOMUtils.setButtonLoading(SELECTORS.generateCardsBtn, " Generating...");
+      const btn = DOMUtils.get(SELECTORS.generateCardsBtn);
+      if (btn) btn.disabled = true;
+      
+      ProgressModule.show("Generating cards...");
 
       const result = await API.post("cards/generate", { csv_path: csvPath });
-
+      
       if (result.success) {
         Utils.showMessage(SELECTORS.generateStatus, result.summary, "success");
         // Reload generated cards list
         this.loadGeneratedCards();
       }
+      
+      setTimeout(() => ProgressModule.hide(), 1000);
     } catch (error) {
+      ProgressModule.hide();
       Utils.showMessage(
         SELECTORS.generateStatus,
         `Error: ${error.message}`,
         "error"
       );
     } finally {
-      DOMUtils.resetButton(SELECTORS.generateCardsBtn, "🎨 Generate Cards");
+      const btn = DOMUtils.get(SELECTORS.generateCardsBtn);
+      if (btn) btn.disabled = false;
     }
   },
 
@@ -136,11 +144,24 @@ export const GenerateModule = {
       filesDiv.appendChild(pageDiv);
     });
 
+    // Generate PDFs button
+    const generatePdfBtn = DOMUtils.create("button", {
+      class: "btn btn-secondary",
+      style: "margin-top: 15px; width: 100%;"
+    }, [set.has_all_pdfs ? "✅ All PDFs Generated" : "📄 Generate All PDFs"]);
+    
+    if (!set.has_all_pdfs) {
+      generatePdfBtn.addEventListener("click", () => this.generatePdfs(set.path));
+    } else {
+      generatePdfBtn.disabled = true;
+    }
+    filesDiv.appendChild(generatePdfBtn);
+
     // Print all button
     if (set.files.length > 0) {
       const printAllBtn = DOMUtils.create("button", {
         class: "btn btn-primary",
-        style: "margin-top: 15px; width: 100%;"
+        style: "margin-top: 10px; width: 100%;"
       }, ["🖨️ Print All Pages"]);
       printAllBtn.addEventListener("click", () => this.printAllPages(set.files.map(f => f.url)));
       filesDiv.appendChild(printAllBtn);
@@ -156,83 +177,136 @@ export const GenerateModule = {
    */
   openForPrint(url) {
     const printWindow = window.open(url, "_blank");
-    if (printWindow) {
-      // Wait for window to fully load before printing
-      const checkLoad = setInterval(() => {
-        if (printWindow.document.readyState === "complete") {
+    if (!printWindow) return;
+    
+    let hasPrinted = false;
+    
+    // Wait for window to fully load before printing
+    const checkLoad = setInterval(() => {
+      try {
+        if (printWindow.document.readyState === "complete" && !hasPrinted) {
           clearInterval(checkLoad);
+          hasPrinted = true;
           // Small delay to ensure rendering is complete
           setTimeout(() => {
-            printWindow.print();
-          }, 300);
+            try {
+              printWindow.print();
+            } catch (e) {
+              console.error("Print error:", e);
+            }
+          }, 500);
         }
-      }, 100);
-      
-      // Fallback timeout
-      setTimeout(() => {
+      } catch (e) {
+        // Window might be closed or cross-origin
         clearInterval(checkLoad);
-        if (printWindow.document.readyState === "complete") {
-          printWindow.print();
+      }
+    }, 100);
+    
+    // Fallback timeout - only print once
+    setTimeout(() => {
+      clearInterval(checkLoad);
+      if (!hasPrinted) {
+        try {
+          if (printWindow.document.readyState === "complete") {
+            hasPrinted = true;
+            printWindow.print();
+          }
+        } catch (e) {
+          console.error("Print error:", e);
         }
-      }, 5000);
-    }
+      }
+    }, 5000);
   },
 
   /**
    * Print both front and back pages
    */
   printBothPages(frontUrl, backUrl) {
-    // Open both windows first
-    const frontWindow = window.open(frontUrl, "_blank");
-    const backWindow = window.open(backUrl, "_blank");
+    // Store URLs for sequential opening to avoid popup blocking
+    const urls = [frontUrl, backUrl];
+    let currentIndex = 0;
     
-    if (!frontWindow || !backWindow) {
-      alert("Please allow popups for this site to print both pages.");
-      return;
-    }
-    
-    let frontLoaded = false;
-    let backLoaded = false;
-    
-    const tryPrint = () => {
-      if (frontLoaded && backLoaded) {
-        // Print front first, then back after a delay
-        setTimeout(() => {
-          frontWindow.print();
-        }, 500);
-        
-        setTimeout(() => {
-          backWindow.print();
-        }, 2000);
+    const openNext = () => {
+      if (currentIndex >= urls.length) return;
+      
+      const url = urls[currentIndex];
+      const windowName = `printWindow_${currentIndex}`;
+      
+      // Open window with unique name to avoid blocking
+      const printWindow = window.open(url, windowName, "width=800,height=600");
+      
+      if (!printWindow) {
+        if (currentIndex === 0) {
+          alert("Please allow popups for this site to print both pages.");
+        }
+        return;
       }
+      
+      let hasPrinted = false;
+      const isFirst = currentIndex === 0;
+      const isLast = currentIndex === urls.length - 1;
+      
+      // Wait for window to load, then print
+      const checkLoad = setInterval(() => {
+        try {
+          if (printWindow.document.readyState === "complete" && !hasPrinted) {
+            clearInterval(checkLoad);
+            hasPrinted = true;
+            
+            // Focus and print
+            setTimeout(() => {
+              try {
+                printWindow.focus();
+                printWindow.print();
+                
+                // After printing, open next window (if not last)
+                if (!isLast) {
+                  setTimeout(() => {
+                    currentIndex++;
+                    openNext();
+                  }, 1000);
+                }
+              } catch (e) {
+                console.error(`Print error for window ${currentIndex}:`, e);
+                if (!isLast) {
+                  currentIndex++;
+                  openNext();
+                }
+              }
+            }, isFirst ? 800 : 500);
+          }
+        } catch (e) {
+          clearInterval(checkLoad);
+          if (!isLast) {
+            currentIndex++;
+            openNext();
+          }
+        }
+      }, 100);
+      
+      // Fallback timeout
+      setTimeout(() => {
+        clearInterval(checkLoad);
+        if (!hasPrinted) {
+          try {
+            if (printWindow.document.readyState === "complete") {
+              hasPrinted = true;
+              printWindow.focus();
+              printWindow.print();
+            }
+          } catch (e) {
+            console.error(`Print error for window ${currentIndex}:`, e);
+          }
+        }
+        if (!isLast) {
+          currentIndex++;
+          openNext();
+        }
+      }, 5000);
     };
     
-    // Check front window load
-    const checkFrontLoad = setInterval(() => {
-      if (frontWindow.document.readyState === "complete") {
-        clearInterval(checkFrontLoad);
-        frontLoaded = true;
-        tryPrint();
-      }
-    }, 100);
-    
-    // Check back window load
-    const checkBackLoad = setInterval(() => {
-      if (backWindow.document.readyState === "complete") {
-        clearInterval(checkBackLoad);
-        backLoaded = true;
-        tryPrint();
-      }
-    }, 100);
-    
-    // Fallback timeout
-    setTimeout(() => {
-      clearInterval(checkFrontLoad);
-      clearInterval(checkBackLoad);
-      if (frontWindow.document.readyState === "complete") frontLoaded = true;
-      if (backWindow.document.readyState === "complete") backLoaded = true;
-      tryPrint();
-    }, 5000);
+    // Start opening windows sequentially
+    openNext();
   },
 
   /**
@@ -245,5 +319,40 @@ export const GenerateModule = {
         this.openForPrint(url);
       }, index * 1000); // 1 second delay between each
     });
+  },
+
+  /**
+   * Generate PDFs from HTML files
+   */
+  async generatePdfs(cardSetPath) {
+    const statusElement = DOMUtils.get(SELECTORS.generateStatus);
+    
+    try {
+      ProgressModule.show("Generating PDFs...");
+
+      const result = await API.post("cards/generate-pdfs", { path: cardSetPath });
+      
+      if (result.success) {
+        const message = result.message || `Generated ${result.generated?.length || 0} PDF file(s)`;
+        Utils.showMessage(statusElement, message, "success");
+        // Reload the generated cards list to show updated PDF status
+        this.loadGeneratedCards();
+        setTimeout(() => ProgressModule.hide(), 1500);
+      } else {
+        ProgressModule.hide();
+        Utils.showMessage(
+          statusElement,
+          `Error: ${result.error || "Failed to generate PDFs"}`,
+          "error"
+        );
+      }
+    } catch (error) {
+      ProgressModule.hide();
+      Utils.showMessage(
+        statusElement,
+        `Error: ${error.message}`,
+        "error"
+      );
+    }
   },
 };

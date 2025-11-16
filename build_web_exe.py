@@ -45,8 +45,18 @@ build_args.extend([
     '--hidden-import', 'werkzeug',
     '--hidden-import', 'rich',
     '--hidden-import', 'qrcode',
+    '--hidden-import', 'weasyprint',
+    '--hidden-import', 'cffi',
+    '--hidden-import', 'pydyf',
+    '--hidden-import', 'tinycss2',
+    '--hidden-import', 'cssselect2',
+    '--hidden-import', 'Pyphen',
+    '--hidden-import', 'fonttools',
+    '--hidden-import', 'tinyhtml5',
     '--collect-submodules', 'flask',
     '--collect-submodules', 'jinja2',
+    '--collect-submodules', 'weasyprint',
+    '--collect-submodules', 'cffi',
 ])
 
 # Run PyInstaller

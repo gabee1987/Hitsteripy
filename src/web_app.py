@@ -17,6 +17,33 @@ parent_dir = Path(__file__).parent.parent
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
+# Get base directory for runtime data (where exe is running from, not PyInstaller temp)
+def get_base_dir():
+    """Get the base directory for runtime data files.
+    
+    In PyInstaller bundle: Returns the directory where the exe is running from
+    In development: Returns the project root directory
+    """
+    if hasattr(sys, '_MEIPASS'):
+        # Running from PyInstaller bundle - use the directory where exe is located
+        # sys.executable is the path to the exe file
+        return os.path.dirname(os.path.abspath(sys.executable))
+    else:
+        # Running in development - use project root
+        return str(parent_dir)
+
+base_dir = get_base_dir()
+
+# Initialize data directories relative to base_dir
+DATA_DIR = os.path.join(base_dir, "data")
+PLAYLIST_HISTORY_FILE = os.path.join(DATA_DIR, "playlist_history.json")
+TRACK_COUNT_HISTORY_FILE = os.path.join(DATA_DIR, "track_count_history.json")
+
+# Ensure data directories exist
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(os.path.join(base_dir, "generated_cards"), exist_ok=True)
+os.makedirs(os.path.join(base_dir, "imported_tracks"), exist_ok=True)
+
 from src.logger import log_info, log_error, log_success
 from src.spotify_utils import init_spotify_client, test_spotify_connection, extract_id_from_url, fetch_playlist_name
 from src.track_importer import import_tracks
@@ -56,13 +83,15 @@ app_state = {
     "spotify_client": None
 }
 
-DATA_DIR = "data"
-PLAYLIST_HISTORY_FILE = os.path.join(DATA_DIR, "playlist_history.json")
-TRACK_COUNT_HISTORY_FILE = os.path.join(DATA_DIR, "track_count_history.json")
+# DATA_DIR will be set after base_dir is defined
+# See below for actual initialization
 
 def load_history(file_path):
     """Load history data (JSON) from file or return empty list."""
-    os.makedirs(DATA_DIR, exist_ok=True)
+    # Ensure directory exists
+    dir_path = os.path.dirname(file_path)
+    if dir_path:
+        os.makedirs(dir_path, exist_ok=True)
     if os.path.exists(file_path):
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -73,7 +102,10 @@ def load_history(file_path):
 
 def save_history(file_path, data):
     """Save JSON data to file with indentation."""
-    os.makedirs(DATA_DIR, exist_ok=True)
+    # Ensure directory exists
+    dir_path = os.path.dirname(file_path)
+    if dir_path:
+        os.makedirs(dir_path, exist_ok=True)
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
@@ -302,13 +334,13 @@ def import_tracks_endpoint():
 @app.route('/api/cards/csv-files')
 def get_csv_files():
     """Get list of imported CSV files."""
-    base_dir = "imported_tracks"
-    if not os.path.isdir(base_dir):
+    imports_dir = os.path.join(base_dir, "imported_tracks")
+    if not os.path.isdir(imports_dir):
         return jsonify([])
     
     files = []
-    for subdir_name in os.listdir(base_dir):
-        subdir_path = os.path.join(base_dir, subdir_name)
+    for subdir_name in os.listdir(imports_dir):
+        subdir_path = os.path.join(imports_dir, subdir_name)
         if not os.path.isdir(subdir_path):
             continue
         
@@ -335,7 +367,7 @@ def generate_cards_endpoint():
     try:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         sanitized_name = sanitize_filename(app_state.get("playlist_name") or "Unknown_Playlist")
-        output_dir = os.path.join("generated_cards", f"{timestamp}_{sanitized_name}")
+        output_dir = os.path.join(base_dir, "generated_cards", f"{timestamp}_{sanitized_name}")
         
         os.makedirs(output_dir, exist_ok=True)
         
@@ -454,9 +486,9 @@ def serve_generated_card(filename):
         if len(path_parts) > 1:
             subdir = '/'.join(path_parts[:-1])
             filename_only = path_parts[-1]
-            full_dir_path = os.path.join(parent_dir, 'generated_cards', subdir)
+            full_dir_path = os.path.join(base_dir, 'generated_cards', subdir)
         else:
-            full_dir_path = os.path.join(parent_dir, 'generated_cards')
+            full_dir_path = os.path.join(base_dir, 'generated_cards')
             filename_only = decoded_filename
         
         # Verify the file exists
@@ -474,7 +506,7 @@ def get_generated_cards():
     """Get list of generated card sets."""
     ensure_spotify_init()
     try:
-        generated_cards_dir = "generated_cards"
+        generated_cards_dir = os.path.join(base_dir, "generated_cards")
         if not os.path.exists(generated_cards_dir):
             return jsonify([])
         
@@ -483,25 +515,161 @@ def get_generated_cards():
             item_path = os.path.join(generated_cards_dir, item)
             if os.path.isdir(item_path):
                 files = []
+                html_count = 0
+                pdf_count = 0
+                
+                # Check for PDFs folder
+                pdfs_dir = os.path.join(item_path, 'pdfs')
+                pdfs_exist = os.path.exists(pdfs_dir) and os.path.isdir(pdfs_dir)
+                
                 for file in sorted(os.listdir(item_path)):
                     if file.endswith('.html'):
+                        html_count += 1
+                        # Check if PDF exists in pdfs subfolder
+                        pdf_name = file.replace('.html', '.pdf')
+                        pdf_path = os.path.join(pdfs_dir, pdf_name) if pdfs_exist else os.path.join(item_path, pdf_name)
+                        has_pdf = os.path.exists(pdf_path)
+                        
+                        # Also check old location for backwards compatibility
+                        if not has_pdf:
+                            old_pdf_path = os.path.join(item_path, pdf_name)
+                            has_pdf = os.path.exists(old_pdf_path)
+                        
                         files.append({
                             "name": file,
                             "url": f"/generated_cards/{item}/{file}",
-                            "type": "front" if "front" in file else "back"
+                            "type": "front" if "front" in file else "back",
+                            "has_pdf": has_pdf,
+                            "pdf_name": pdf_name if has_pdf else None
                         })
+                
+                # Count PDFs in pdfs folder
+                if pdfs_exist:
+                    pdf_count = len([f for f in os.listdir(pdfs_dir) if f.endswith('.pdf')])
                 
                 if files:
                     card_sets.append({
                         "name": item,
                         "path": item,
                         "files": files,
-                        "count": len(files)
+                        "count": html_count,
+                        "pdf_count": pdf_count,
+                        "has_all_pdfs": pdf_count == html_count and html_count > 0
                     })
         
         return jsonify(card_sets)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/cards/generate-pdfs', methods=['POST'])
+def generate_pdfs():
+    """Generate PDF files from HTML files in a card set directory."""
+    ensure_spotify_init()
+    try:
+        try:
+            from weasyprint import HTML
+        except ImportError as e:
+            error_msg = f"WeasyPrint is not installed. Install it: py -m pip install weasyprint (or activate venv first). Error: {str(e)}"
+            log_error(app_state, error_msg)
+            return jsonify({"success": False, "error": error_msg}), 500
+        except OSError as e:
+            # Windows-specific: Missing GTK+ libraries
+            error_msg = (
+                "WeasyPrint requires GTK3 Runtime on Windows.\n\n"
+                "To install GTK3 Runtime:\n"
+                "1. Download from: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases\n"
+                "2. Install GTK3 Runtime (MSYS2-based version)\n"
+                "3. Restart the application\n\n"
+                "Alternative: Use browser Print-to-PDF (Ctrl+P -> Save as PDF)"
+            )
+            log_error(app_state, f"WeasyPrint GTK error: {str(e)}")
+            return jsonify({"success": False, "error": error_msg}), 500
+        
+        from urllib.parse import unquote
+        
+        data = request.json
+        card_set_path = data.get('path')  # e.g., "20251116_115727_TuneTrack Apa"
+        
+        if not card_set_path:
+            return jsonify({"success": False, "error": "Card set path not provided"}), 400
+        
+        # Decode URL-encoded path
+        decoded_path = unquote(card_set_path)
+        card_set_dir = os.path.join(base_dir, 'generated_cards', decoded_path)
+        
+        if not os.path.exists(card_set_dir) or not os.path.isdir(card_set_dir):
+            return jsonify({"success": False, "error": f"Card set directory not found: {card_set_dir}"}), 404
+        
+        # Find all HTML files
+        html_files = [f for f in sorted(os.listdir(card_set_dir)) if f.endswith('.html')]
+        
+        if not html_files:
+            return jsonify({"success": False, "error": "No HTML files found in card set"}), 400
+        
+        # Create pdfs subfolder if it doesn't exist
+        pdfs_dir = os.path.join(card_set_dir, 'pdfs')
+        os.makedirs(pdfs_dir, exist_ok=True)
+        
+        generated_pdfs = []
+        errors = []
+        total_files = len(html_files)
+        
+        for idx, html_file in enumerate(html_files, 1):
+            try:
+                html_path = os.path.join(card_set_dir, html_file)
+                pdf_file = html_file.replace('.html', '.pdf')
+                # Save PDF in pdfs subfolder
+                pdf_path = os.path.join(pdfs_dir, pdf_file)
+                
+                log_info(app_state, f"Generating PDF {idx}/{total_files}: {pdf_file}")
+                
+                # Read HTML content
+                with open(html_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
+                
+                # Convert to PDF using WeasyPrint
+                # Use base_url to resolve relative paths (if any)
+                html_doc = HTML(string=html_content, base_url=card_set_dir)
+                
+                # Generate PDF with A4 size and proper margins
+                html_doc.write_pdf(
+                    pdf_path,
+                    stylesheets=None,  # CSS is already embedded in HTML
+                )
+                
+                generated_pdfs.append(pdf_file)
+                log_info(app_state, f"Generated PDF: {pdf_file} in pdfs/ folder")
+                
+            except ImportError as e:
+                error_msg = f"WeasyPrint not available. Please install: pip install weasyprint"
+                errors.append(error_msg)
+                log_error(app_state, error_msg)
+                break
+            except Exception as e:
+                error_msg = f"Error converting {html_file} to PDF: {str(e)}"
+                errors.append(error_msg)
+                log_error(app_state, error_msg)
+        
+        if errors and not generated_pdfs:
+            return jsonify({"success": False, "error": "; ".join(errors)}), 500
+        
+        success_msg = f"Generated {len(generated_pdfs)} PDF file(s)"
+        if errors:
+            success_msg += f" ({len(errors)} error(s))"
+        
+        log_success(app_state, success_msg)
+        
+        return jsonify({
+            "success": True,
+            "generated": generated_pdfs,
+            "errors": errors,
+            "message": success_msg
+        })
+        
+    except Exception as e:
+        error_msg = str(e)
+        log_error(app_state, f"Failed to generate PDFs: {error_msg}")
+        return jsonify({"success": False, "error": error_msg}), 500
 
 def run_web_app(host='127.0.0.1', port=5000, open_browser=True):
     """Run the Flask web application."""
