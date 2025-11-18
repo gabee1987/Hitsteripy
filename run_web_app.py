@@ -1,5 +1,5 @@
 """
-Launcher script for Hitsteripy Web App
+Launcher script for TuneGen Web App
 Starts the Flask web server and opens browser automatically.
 """
 import os

@@ -9,13 +9,13 @@
     size: A4 portrait;
     margin: 5mm;
   }
-  
+
   * {
     print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
@@ -23,7 +23,7 @@
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   .page {
     /* Only add page break if not the last page */
     page-break-after: always;
@@ -32,14 +32,14 @@
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   /* Remove page break from last page to prevent blank page */
   body > .page:last-of-type,
   .page:last-child,
   .page.last-page {
     page-break-after: auto !important;
   }
-  
+
   .card {
     page-break-inside: avoid;
     break-inside: avoid;
@@ -47,14 +47,14 @@
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   .front,
   .back {
     print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   /* Ensure gradients and backgrounds print */
   /* CRITICAL: Don't set background here - let inline styles with !important take precedence */
   .front {
@@ -64,7 +64,7 @@
     color-adjust: exact !important;
     /* DO NOT set background here - inline gradient style must win */
   }
-  
+
   /* Additional rule to ensure inline gradient styles are preserved */
   .card.front[style*="gradient"] {
     -webkit-print-color-adjust: exact !important;
@@ -72,13 +72,13 @@
     color-adjust: exact !important;
     /* Let the inline style handle background */
   }
-  
+
   .back {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
+
   img {
     print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
@@ -130,7 +130,11 @@ body {
 .front .artist {
   font-size: 1.2em;
   font-weight: bold;
-  margin-top: 8mm; /* Same space from top edge as song has from bottom edge */
+  position: absolute;
+  top: 8mm;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 
 .front .year {
@@ -141,7 +145,11 @@ body {
 
 .front .song-name {
   font-size: 1em;
-  margin-bottom: 8mm; /* Increased space between song name and bottom edge */
+  position: absolute;
+  bottom: 8mm;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 
 /* Footer row container - positions TuneTrack and serial number on the same row */
